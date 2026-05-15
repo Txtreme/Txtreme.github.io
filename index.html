@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saad Zafar — Game Dev & Technical Artist</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --blue: #4A6FA5;
+      --blue-dark: #3D5A80;
+      --pink: #F2C4CE;
+      --pink-light: #F7DDE3;
+      --accent: #2B44FF;
+      --bg: #5B7FB5;
+      --text-dark: #1a1a2e;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--pink);
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--blue-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 4px; }
+
+    /* ── Marquee top ── */
+    .marquee-top {
+      background: var(--pink);
+      color: var(--bg);
+      padding: 10px 0;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      overflow: hidden;
+      white-space: nowrap;
+      border-bottom: 3px solid var(--blue-dark);
+    }
+    .marquee-inner { display: inline-block; animation: marquee 22s linear infinite; }
+    @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .marquee-inner span { margin: 0 28px; }
+    .marquee-inner .dot {
+      display: inline-block; width: 5px; height: 5px;
+      background: var(--accent); border-radius: 50%;
+      vertical-align: middle; margin: 0 12px;
+    }
+
+    /* ── Nav ── */
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 22px 48px; position: relative; z-index: 100;
+    }
+    .logo {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 22px; color: var(--pink); letter-spacing: 1px;
+    }
+    .logo-sub {
+      font-size: 11px; font-weight: 500; opacity: 0.6;
+      letter-spacing: 3px; text-transform: uppercase;
+      display: block; margin-top: 2px;
+    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: var(--pink); text-decoration: none; font-size: 13px;
+      font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+      position: relative; transition: color .3s; opacity: .8;
+    }
+    .nav-links a:hover { opacity: 1; }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 2px; background: var(--pink-light); transition: width .3s;
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .contact-btn {
+      background: var(--accent); color: white; border: none;
+      padding: 12px 28px; border-radius: 50px;
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 13px; letter-spacing: 1px; text-transform: uppercase;
+      cursor: pointer; transition: transform .3s, box-shadow .3s;
+    }
+    .contact-btn:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(43,68,255,.45); }
+
+    /* ── Hero ── */
+    .hero {
+      display: grid; grid-template-columns: 1fr 1fr;
+      min-height: 90vh; padding: 20px 48px 60px; gap: 36px;
+      position: relative; align-items: center;
+    }
+    .hero-left { display: flex; flex-direction: column; justify-content: center; }
+    .eyebrow {
+      font-size: 12px; font-weight: 700; letter-spacing: 5px;
+      text-transform: uppercase; opacity: .55; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .eyebrow::before { content: ''; display: block; width: 30px; height: 2px; background: var(--pink); opacity: .5; }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(46px, 5.8vw, 86px); line-height: 0.95;
+      color: var(--pink); text-transform: uppercase; letter-spacing: -2px;
+    }
+    .hero-title .outline {
+      -webkit-text-stroke: 2px var(--pink); color: transparent;
+    }
+    .hero-title .highlight { color: var(--accent); -webkit-text-stroke: 0; }
+
+    .hero-sub {
+      margin-top: 28px; font-size: 16px; line-height: 1.75;
+      color: var(--pink-light); max-width: 440px; opacity: .82;
+    }
+
+    .hero-chips {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px;
+    }
+    .chip {
+      border: 1px solid rgba(242,196,206,.25); color: var(--pink-light);
+      padding: 7px 16px; border-radius: 40px; font-size: 12px;
+      letter-spacing: 1px; text-transform: uppercase; font-weight: 600;
+      background: rgba(242,196,206,.07);
+    }
+
+    .hero-right {
+      display: grid; grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr; gap: 14px;
+    }
+    .hero-card {
+      background: var(--pink); color: var(--blue-dark);
+      padding: 26px; display: flex; flex-direction: column;
+      justify-content: space-between; overflow: hidden;
+      transition: transform .4s cubic-bezier(.25,.46,.45,.94);
+      position: relative;
+    }
+    .hero-card:hover { transform: scale(0.97); }
+    .hero-card:nth-child(1) { border-radius: 24px 4px 4px 4px; }
+    .hero-card:nth-child(2) { border-radius: 4px 24px 4px 4px; }
+    .hero-card:nth-child(3) { border-radius: 4px 4px 4px 24px; }
+    .hero-card:nth-child(4) {
+      border-radius: 4px 4px 24px 4px;
+      background: var(--accent); color: white;
+    }
+    .card-label {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 11px; letter-spacing: 3px; text-transform: uppercase; opacity: .55;
+    }
+    .card-title {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 22px; line-height: 1.1; text-transform: uppercase;
+    }
+    .card-icon {
+      position: absolute; bottom: 14px; right: 14px;
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .hero-card:nth-child(1) .card-icon,
+    .hero-card:nth-child(2) .card-icon,
+    .hero-card:nth-child(3) .card-icon { background: var(--blue-dark); color: var(--pink); }
+    .hero-card:nth-child(4) .card-icon { background: white; color: var(--accent); }
+
+    /* ── Skills bar ── */
+    .skills-bar {
+      background: var(--pink); padding: 16px 0;
+      overflow: hidden; white-space: nowrap;
+    }
+    .skills-inner { display: inline-block; animation: marquee 28s linear infinite; }
+    .skills-inner span {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 20px; color: var(--bg); text-transform: uppercase;
+      letter-spacing: 2px; margin: 0 18px;
+    }
+    .skills-inner .plus { color: var(--accent); font-size: 24px; margin: 0 10px; }
+
+    /* ── Section header ── */
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 5px;
+      text-transform: uppercase; opacity: .5; margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(34px, 4vw, 58px); text-transform: uppercase;
+      letter-spacing: -2px; line-height: 1;
+    }
+    .section-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-end; margin-bottom: 48px;
+    }
+    .section-count {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 72px; color: var(--accent); line-height: 1; opacity: .35;
+    }
+
+    /* ── Projects ── */
+    .projects { padding: 80px 48px; }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      gap: 18px;
+    }
+
+    .project-item {
+      background: var(--blue-dark); border-radius: 16px;
+      overflow: hidden; position: relative;
+      cursor: pointer; transition: transform .4s;
+    }
+    .project-item:hover { transform: translateY(-8px); }
+    .project-item:nth-child(1) { aspect-ratio: 4/3; }
+    .project-item:nth-child(2) { grid-row: span 2; aspect-ratio: auto; min-height: 340px; }
+    .project-item:nth-child(3) { aspect-ratio: 4/3; }
+    .project-item:nth-child(4) { aspect-ratio: 4/3; }
+    .project-item:nth-child(5) { aspect-ratio: 4/3; }
+
+    .project-visual { width: 100%; height: 100%; position: relative; overflow: hidden; }
+    .project-canvas { width: 100%; height: 100%; display: block; }
+
+    .project-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0; padding: 22px;
+      background: linear-gradient(transparent, rgba(13,20,40,.92));
+    }
+    .project-name {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 18px; color: var(--pink); text-transform: uppercase;
+    }
+    .project-sub { font-size: 12px; opacity: .6; margin-top: 3px; margin-bottom: 8px; }
+    .project-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+    .tag {
+      background: rgba(242,196,206,.13); color: var(--pink-light);
+      padding: 3px 10px; border-radius: 40px; font-size: 10px;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    /* ── About ── */
+    .about {
+      padding: 80px 48px;
+      display: grid; grid-template-columns: 1fr 1.3fr;
+      gap: 64px; align-items: center;
+    }
+    .about-left { position: relative; }
+    .about-badge {
+      width: 160px; height: 160px; background: var(--accent);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; position: relative;
+      margin: 0 auto; animation: floatBadge 4s ease-in-out infinite;
+    }
+    @keyframes floatBadge {
+      0%,100%{transform:translateY(0) rotate(0deg)}
+      50%{transform:translateY(-12px) rotate(4deg)}
+    }
+    .about-badge svg { position: absolute; width: 100%; height: 100%; animation: spinText 16s linear infinite; }
+    @keyframes spinText { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+    .badge-center { font-family:'Syne',sans-serif; font-weight:800; font-size:26px; color:white; z-index:2; line-height:1.1; text-align:center; }
+
+    .about-stats {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 16px; margin-top: 44px;
+    }
+    .stat {
+      text-align: center; padding: 22px 12px;
+      background: rgba(242,196,206,.07); border-radius: 14px;
+      border: 1px solid rgba(242,196,206,.1);
+    }
+    .stat-num { font-family:'Syne',sans-serif; font-weight:800; font-size:34px; color:var(--pink); }
+    .stat-label { font-size:11px; letter-spacing:2px; text-transform:uppercase; opacity:.55; margin-top:4px; }
+
+    .about-right h2 {
+      font-family:'Syne',sans-serif; font-weight:800;
+      font-size:clamp(26px,3vw,42px); text-transform:uppercase;
+      letter-spacing:-1px; line-height:1.1; margin-bottom:22px;
+    }
+    .about-right p { font-size:15px; line-height:1.8; opacity:.8; max-width:520px; }
+    .about-right p + p { margin-top:14px; }
+
+    .tools-list { display:flex; flex-wrap:wrap; gap:9px; margin-top:28px; }
+    .tool {
+      background: var(--pink); color: var(--blue-dark);
+      padding: 7px 18px; border-radius: 40px;
+      font-family:'Syne',sans-serif; font-weight:700;
+      font-size:12px; text-transform:uppercase; letter-spacing:1px;
+      transition: transform .2s, background .2s; cursor:default;
+    }
+    .tool:hover { transform:scale(1.05); background:var(--accent); color:white; }
+
+    /* ── Experience timeline ── */
+    .experience { padding: 80px 48px; }
+    .timeline { margin-top: 50px; position: relative; }
+    .timeline::before {
+      content:''; position:absolute; left:12px; top:0; bottom:0;
+      width:2px; background:rgba(242,196,206,.15);
+    }
+    .tl-item {
+      display: flex; gap: 36px; margin-bottom: 44px; position:relative;
+    }
+    .tl-dot {
+      flex-shrink:0; width:26px; height:26px;
+      background:var(--accent); border-radius:50%; z-index:1;
+      margin-top:4px; display:flex; align-items:center; justify-content:center;
+      font-size:10px; color:white; font-weight:800;
+    }
+    .tl-content {
+      background: rgba(242,196,206,.07);
+      border: 1px solid rgba(242,196,206,.1);
+      border-radius: 14px; padding: 22px 26px; flex: 1;
+      transition: transform .3s, background .3s;
+    }
+    .tl-content:hover { transform: translateX(6px); background: rgba(242,196,206,.1); }
+    .tl-date { font-size:11px; letter-spacing:3px; text-transform:uppercase; opacity:.5; margin-bottom:6px; }
+    .tl-title { font-family:'Syne',sans-serif; font-weight:800; font-size:18px; text-transform:uppercase; margin-bottom:6px; }
+    .tl-company { color:var(--accent); font-size:13px; font-weight:600; margin-bottom:10px; }
+    .tl-desc { font-size:13px; line-height:1.7; opacity:.75; }
+
+    /* ── Services ── */
+    .services { padding: 80px 48px; }
+    .services-grid {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 14px; margin-top: 48px;
+    }
+    .service-card {
+      background: var(--pink); color: var(--blue-dark);
+      padding: 30px 22px; border-radius: 16px;
+      position: relative; overflow: hidden; transition: transform .3s;
+    }
+    .service-card:hover { transform: translateY(-6px); }
+    .service-card:nth-child(even) { background: var(--blue-dark); color: var(--pink); }
+    .service-num {
+      font-family:'Syne',sans-serif; font-weight:800; font-size:44px;
+      opacity:.12; position:absolute; top:10px; right:14px;
+    }
+    .service-icon {
+      width:48px; height:48px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:20px; margin-bottom:18px;
+    }
+    .service-card:nth-child(odd) .service-icon { background:var(--blue-dark); color:var(--pink); }
+    .service-card:nth-child(even) .service-icon { background:var(--pink); color:var(--blue-dark); }
+    .service-title {
+      font-family:'Syne',sans-serif; font-weight:700;
+      font-size:16px; text-transform:uppercase; margin-bottom:8px;
+    }
+    .service-desc { font-size:12px; line-height:1.65; opacity:.7; }
+
+    /* ── Live Games ── */
+    .live-games { padding: 80px 48px; }
+    .games-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 18px; margin-top: 48px;
+    }
+    .game-card {
+      background: var(--blue-dark); border-radius: 18px;
+      padding: 0; overflow: hidden; text-decoration: none;
+      color: var(--pink); display: flex; flex-direction: column;
+      position: relative; transition: transform .4s, box-shadow .4s;
+      border: 1px solid rgba(242,196,206,.08);
+    }
+    .game-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 48px rgba(0,0,0,.35);
+      border-color: var(--accent-color, var(--accent));
+    }
+    .game-badge {
+      position: absolute; top: 14px; right: 14px; z-index: 3;
+      background: var(--accent); color: white;
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 40px;
+    }
+    .game-canvas {
+      width: 100%; height: 140px; display: block;
+    }
+    .game-info {
+      display: flex; align-items: center; gap: 14px;
+      padding: 18px 22px 0;
+    }
+    .game-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(242,196,206,.08);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; flex-shrink: 0;
+    }
+    .game-name {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 16px; text-transform: uppercase; line-height: 1.2;
+    }
+    .game-genre {
+      font-size: 11px; opacity: .5; margin-top: 3px;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .game-desc {
+      font-size: 13px; line-height: 1.65; opacity: .7;
+      padding: 12px 22px 0; flex: 1;
+    }
+    .game-footer {
+      display: flex; align-items: center; flex-wrap: wrap;
+      gap: 8px; padding: 16px 22px 20px;
+    }
+    .game-tag {
+      background: rgba(242,196,206,.1); color: var(--pink-light);
+      padding: 4px 12px; border-radius: 40px; font-size: 10px;
+      letter-spacing: 1px; text-transform: uppercase; font-weight: 600;
+    }
+    .game-store-link {
+      margin-left: auto;
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--accent-color, var(--accent));
+      display: flex; align-items: center; gap: 6px;
+      transition: gap .3s;
+    }
+    .game-card:hover .game-store-link { gap: 12px; }
+    .game-store-link .arrow { transition: transform .3s; }
+    .game-card:hover .game-store-link .arrow { transform: translateX(4px); }
+
+    .games-studio-bar {
+      margin-top: 28px; padding: 20px 28px;
+      background: rgba(242,196,206,.06);
+      border: 1px solid rgba(242,196,206,.1);
+      border-radius: 14px;
+      display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+    }
+    .studio-label {
+      font-size: 10px; letter-spacing: 3px;
+      text-transform: uppercase; opacity: .4;
+    }
+    .studio-name {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 18px; text-transform: uppercase; color: var(--accent);
+    }
+    .studio-roles {
+      font-size: 11px; opacity: .55; letter-spacing: 1px;
+      margin-left: auto;
+    }
+
+    @media(max-width:600px) {
+      .games-grid { grid-template-columns: 1fr; }
+      .games-studio-bar { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .studio-roles { margin-left: 0; }
+    }
+
+    /* ── Contact ── */
+    .contact { padding: 80px 48px 40px; text-align:center; position:relative; }
+    .contact-big {
+      font-family:'Syne',sans-serif; font-weight:800;
+      font-size:clamp(38px,8vw,110px); text-transform:uppercase;
+      letter-spacing:-3px; line-height:0.95; color:var(--pink);
+    }
+    .contact-big .outline-text { -webkit-text-stroke:2px var(--pink); color:transparent; }
+    .contact-email {
+      font-size:18px; opacity:.55; margin-top:20px; letter-spacing:1px;
+    }
+    .contact-cta {
+      margin-top:40px; display:inline-flex; align-items:center; gap:14px;
+      background:var(--accent); color:white; padding:18px 44px;
+      border-radius:60px; font-family:'Syne',sans-serif; font-weight:700;
+      font-size:16px; text-transform:uppercase; letter-spacing:2px;
+      text-decoration:none; transition:transform .3s, box-shadow .3s;
+      cursor:pointer; border:none;
+    }
+    .contact-cta:hover { transform:scale(1.05); box-shadow:0 8px 30px rgba(43,68,255,.5); }
+    .contact-cta .arrow { display:inline-block; transition:transform .3s; }
+    .contact-cta:hover .arrow { transform:translateX(6px); }
+
+    /* ── Footer ── */
+    footer {
+      padding: 28px 48px;
+      display:flex; justify-content:space-between; align-items:center;
+      border-top:1px solid rgba(242,196,206,.12); margin-top:40px;
+    }
+    footer span { font-size:12px; opacity:.45; }
+    .social-links { display:flex; gap:12px; }
+    .social-links a {
+      width:38px; height:38px; border-radius:50%;
+      border:1px solid rgba(242,196,206,.18);
+      display:flex; align-items:center; justify-content:center;
+      color:var(--pink); text-decoration:none; font-size:13px;
+      transition: background .3s, border-color .3s; font-weight:600;
+    }
+    .social-links a:hover { background:var(--accent); border-color:var(--accent); }
+
+    /* ── Fade-in ── */
+    .fade-in {
+      opacity:0; transform:translateY(28px);
+      transition:opacity .65s ease, transform .65s ease;
+    }
+    .fade-in.visible { opacity:1; transform:translateY(0); }
+
+    /* ── Responsive ── */
+    @media(max-width:1000px){
+      .hero { grid-template-columns:1fr; padding:40px 24px; min-height:auto; }
+      .hero-right { grid-template-columns:1fr 1fr; }
+      .projects-grid { grid-template-columns:1fr 1fr; }
+      .project-item:nth-child(2){ grid-row:auto; min-height:260px; }
+      .about { grid-template-columns:1fr; padding:60px 24px; gap:40px; }
+      .services-grid { grid-template-columns:1fr 1fr; }
+      nav { padding:16px 24px; }
+      .nav-links { display:none; }
+      .experience { padding:60px 24px; }
+    }
+    @media(max-width:600px){
+      .hero-right { grid-template-columns:1fr; }
+      .projects-grid { grid-template-columns:1fr; }
+      .project-item:nth-child(2){ min-height:300px; }
+      .services-grid { grid-template-columns:1fr; }
+      .about-stats { grid-template-columns:repeat(3,1fr); gap:8px; }
+      .stat-num { font-size:26px; }
+      nav { padding:14px 18px; }
+      .projects, .about, .services, .contact, .experience { padding-left:18px; padding-right:18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Marquee top -->
+  <div class="marquee-top">
+    <div class="marquee-inner">
+      <span>TECHNICAL ARTIST</span><span class="dot"></span>
+      <span>GAME DEVELOPER</span><span class="dot"></span>
+      <span>3D ARTIST</span><span class="dot"></span>
+      <span>SHADER DEVELOPMENT</span><span class="dot"></span>
+      <span>PROCEDURAL ART</span><span class="dot"></span>
+      <span>UNITY · HOUDINI · MAYA</span><span class="dot"></span>
+      <span>VR · AR DEVELOPMENT</span><span class="dot"></span>
+      <span>SAAD ZAFAR</span><span class="dot"></span>
+      <span>TECHNICAL ARTIST</span><span class="dot"></span>
+      <span>GAME DEVELOPER</span><span class="dot"></span>
+      <span>3D ARTIST</span><span class="dot"></span>
+      <span>SHADER DEVELOPMENT</span><span class="dot"></span>
+      <span>PROCEDURAL ART</span><span class="dot"></span>
+      <span>UNITY · HOUDINI · MAYA</span><span class="dot"></span>
+      <span>VR · AR DEVELOPMENT</span><span class="dot"></span>
+      <span>SAAD ZAFAR</span><span class="dot"></span>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="logo">
+      SAAD ZAFAR
+      <span class="logo-sub">Game Dev · Tech Artist</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#xp">Experience</a></li>
+      <li><a href="#games">Games</a></li>
+      <li><a href="#services">Services</a></li>
+    </ul>
+    <button class="contact-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Let's Talk</button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">Available for work</div>
+      <h1 class="hero-title">
+        <span class="outline">Game</span><br>
+        Developer<br>
+        <span class="highlight">&</span> Technical<br>
+        <span class="outline">Artist</span>
+      </h1>
+      <p class="hero-sub">
+        Saad Zafar — Technical Artist, Game Designer, 3D Artist &amp; Producer.
+        I craft immersive games and real-time experiences from concept to ship,
+        bridging art and engineering through shaders, procedural systems, and polished gameplay.
+      </p>
+      <div class="hero-chips">
+        <span class="chip">Unity</span>
+        <span class="chip">Houdini</span>
+        <span class="chip">Substance</span>
+        <span class="chip">ZBrush</span>
+        <span class="chip">HLSL</span>
+        <span class="chip">Maya</span>
+        <span class="chip">AR / VR</span>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-card">
+        <span class="card-label">Specialty</span>
+        <span class="card-title">Custom<br>Shaders</span>
+        <div class="card-icon">◆</div>
+      </div>
+      <div class="hero-card">
+        <span class="card-label">Passion</span>
+        <span class="card-title">Procedural<br>Systems</span>
+        <div class="card-icon">⬡</div>
+      </div>
+      <div class="hero-card">
+        <span class="card-label">Craft</span>
+        <span class="card-title">3D Art &amp;<br>Materials</span>
+        <div class="card-icon">✦</div>
+      </div>
+      <div class="hero-card">
+        <span class="card-label">Studio</span>
+        <span class="card-title">MHFL<br>Studios</span>
+        <div class="card-icon">→</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills bar -->
+  <div class="skills-bar">
+    <div class="skills-inner">
+      <span>MAYA</span><span class="plus">+</span>
+      <span>ZBRUSH</span><span class="plus">+</span>
+      <span>SUBSTANCE PAINTER</span><span class="plus">+</span>
+      <span>SUBSTANCE DESIGNER</span><span class="plus">+</span>
+      <span>UNITY</span><span class="plus">+</span>
+      <span>HOUDINI</span><span class="plus">+</span>
+      <span>HLSL</span><span class="plus">+</span>
+      <span>BLENDER</span><span class="plus">+</span>
+      <span>SPARK AR</span><span class="plus">+</span>
+      <span>LENS STUDIO</span><span class="plus">+</span>
+      <span>MAYA</span><span class="plus">+</span>
+      <span>ZBRUSH</span><span class="plus">+</span>
+      <span>SUBSTANCE PAINTER</span><span class="plus">+</span>
+      <span>SUBSTANCE DESIGNER</span><span class="plus">+</span>
+      <span>UNITY</span><span class="plus">+</span>
+      <span>HOUDINI</span><span class="plus">+</span>
+      <span>HLSL</span><span class="plus">+</span>
+      <span>BLENDER</span><span class="plus">+</span>
+      <span>SPARK AR</span><span class="plus">+</span>
+      <span>LENS STUDIO</span><span class="plus">+</span>
+    </div>
+  </div>
+
+  <!-- Projects -->
+  <section class="projects" id="work">
+    <div class="section-header">
+      <div>
+        <div class="section-label fade-in">Selected Work</div>
+        <h2 class="section-title fade-in">Real<br>Projects</h2>
+      </div>
+      <span class="section-count">10</span>
+    </div>
+
+    <div class="projects-grid">
+      <div class="project-item fade-in">
+        <div class="project-visual">
+          <canvas class="project-canvas" id="cv-drift"></canvas>
+        </div>
+        <div class="project-overlay">
+          <div class="project-name">Drift Racing Legends</div>
+          <div class="project-sub">MHFL Studios · Self-Published</div>
+          <div class="project-tags">
+            <span class="tag">Unity</span>
+            <span class="tag">Mobile</span>
+            <span class="tag">Optimization</span>
+            <span class="tag">Light Baking</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item fade-in">
+        <div class="project-visual">
+          <canvas class="project-canvas" id="cv-vr"></canvas>
+        </div>
+        <div class="project-overlay">
+          <div class="project-name">VR Cyberpunk<br>Haptic Reality</div>
+          <div class="project-sub">Saxion University · Art Lead</div>
+          <div class="project-tags">
+            <span class="tag">Unity</span>
+            <span class="tag">VR</span>
+            <span class="tag">Haptic Suit</span>
+            <span class="tag">ZBrush</span>
+            <span class="tag">Substance</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item fade-in">
+        <div class="project-visual">
+          <canvas class="project-canvas" id="cv-ar"></canvas>
+        </div>
+        <div class="project-overlay">
+          <div class="project-name">AR Effects</div>
+          <div class="project-sub">Beyond Agency Amsterdam</div>
+          <div class="project-tags">
+            <span class="tag">Spark AR</span>
+            <span class="tag">Lens Studio</span>
+            <span class="tag">Instagram</span>
+            <span class="tag">Snapchat</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item fade-in">
+        <div class="project-visual">
+          <canvas class="project-canvas" id="cv-terrain"></canvas>
+        </div>
+        <div class="project-overlay">
+          <div class="project-name">Terrain Generation</div>
+          <div class="project-sub">Procedural Pipeline · Ludoscope</div>
+          <div class="project-tags">
+            <span class="tag">Unity</span>
+            <span class="tag">Houdini</span>
+            <span class="tag">Substance Designer</span>
+            <span class="tag">Procedural</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item fade-in">
+        <div class="project-visual">
+          <canvas class="project-canvas" id="cv-aqua"></canvas>
+        </div>
+        <div class="project-overlay">
+          <div class="project-name">Aquatic Life</div>
+          <div class="project-sub">Heim Museum Netherlands</div>
+          <div class="project-tags">
+            <span class="tag">Unity</span>
+            <span class="tag">Maya</span>
+            <span class="tag">Substance</span>
+            <span class="tag">Rigging</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="projects-grid" style="margin-top:18px;">
+      <div class="project-item fade-in">
+        <div class="project-visual">
+          <canvas class="project-canvas" id="cv-portrait"></canvas>
+        </div>
+        <div class="project-overlay">
+          <div class="project-name">Female 3D Portrait</div>
+          <div class="project-sub">Blender + Substance Painter</div>
+          <div class="project-tags">
+            <span class="tag">Blender</span>
+            <span class="tag">Substance</span>
+            <span class="tag">SSS</span>
+            <span class="tag">Shader Graph</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item fade-in">
+        <div class="project-visual">
+          <canvas class="project-canvas" id="cv-herder"></canvas>
+        </div>
+        <div class="project-overlay">
+          <div class="project-name">Central Asian<br>Herder</div>
+          <div class="project-sub">ZBrush · Maya · Arnold · Substance</div>
+          <div class="project-tags">
+            <span class="tag">ZBrush</span>
+            <span class="tag">XGen Hair</span>
+            <span class="tag">Marvelous</span>
+            <span class="tag">Arnold</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item fade-in">
+        <div class="project-visual">
+          <canvas class="project-canvas" id="cv-bmw"></canvas>
+        </div>
+        <div class="project-overlay">
+          <div class="project-name">BMW 635 CSI</div>
+          <div class="project-sub">Hard Surface Model &amp; Texture</div>
+          <div class="project-tags">
+            <span class="tag">Maya</span>
+            <span class="tag">3DS Max</span>
+            <span class="tag">Substance</span>
+            <span class="tag">Iray Render</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item fade-in">
+        <div class="project-visual">
+          <canvas class="project-canvas" id="cv-shader"></canvas>
+        </div>
+        <div class="project-overlay">
+          <div class="project-name">Unity Rain Shader</div>
+          <div class="project-sub">HLSL Custom Shader — HDRP</div>
+          <div class="project-tags">
+            <span class="tag">HLSL</span>
+            <span class="tag">Unity HDRP</span>
+            <span class="tag">Flowmap</span>
+            <span class="tag">Tessellation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item fade-in">
+        <div class="project-visual">
+          <canvas class="project-canvas" id="cv-astro"></canvas>
+        </div>
+        <div class="project-overlay">
+          <div class="project-name">AstroTrash</div>
+          <div class="project-sub">Top-Down Shooter · Team Lead</div>
+          <div class="project-tags">
+            <span class="tag">Game Design</span>
+            <span class="tag">Maya</span>
+            <span class="tag">Environment Art</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about" id="about">
+    <div class="about-left fade-in">
+      <div class="about-badge">
+        <svg viewBox="0 0 160 160">
+          <defs>
+            <path id="circlePath" d="M 80,80 m -58,0 a 58,58 0 1,1 116,0 a 58,58 0 1,1 -116,0"/>
+          </defs>
+          <text fill="white" font-size="12.5" font-family="Syne,sans-serif" font-weight="700" letter-spacing="4">
+            <textPath href="#circlePath">SAAD ZAFAR ✦ TECH ART ✦ GAME DEV ✦ </textPath>
+          </text>
+        </svg>
+        <div class="badge-center">SZ<br><span style="font-size:13px;opacity:.7;">MHFL</span></div>
+      </div>
+      <div class="about-stats">
+        <div class="stat">
+          <div class="stat-num">8+</div>
+          <div class="stat-label">Years</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">10+</div>
+          <div class="stat-label">Projects</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">4</div>
+          <div class="stat-label">Apps Live</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-right fade-in">
+      <h2>Art &amp; Tech.<br>Bridged<br>Together.</h2>
+      <p>
+        I'm Saad — a game developer, technical artist, 3D artist, designer, and producer.
+        I've shipped mobile games under my own studio <strong>MHFL Studios</strong>, worked as a junior
+        AR developer at <strong>Beyond Agency (Amsterdam)</strong>, and led art on VR haptic suit projects at Saxion University.
+      </p>
+      <p>
+        I thrive where art meets engineering — whether that's writing custom HLSL shaders,
+        generating procedural terrain pipelines in Houdini, sculpting high-poly characters in ZBrush,
+        or optimising 4M-poly environments to run on low-end mobile. I'm a problem solver first.
+      </p>
+      <div class="tools-list">
+        <span class="tool">Maya</span>
+        <span class="tool">ZBrush</span>
+        <span class="tool">Blender</span>
+        <span class="tool">Unity</span>
+        <span class="tool">Houdini</span>
+        <span class="tool">Substance Painter</span>
+        <span class="tool">Substance Designer</span>
+        <span class="tool">HLSL / Shader Graph</span>
+        <span class="tool">Spark AR</span>
+        <span class="tool">Lens Studio</span>
+        <span class="tool">Marvelous Designer</span>
+        <span class="tool">XGen</span>
+        <span class="tool">xNormal</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section class="experience" id="xp">
+    <div class="section-label fade-in">Career</div>
+    <h2 class="section-title fade-in">Experience</h2>
+    <div class="timeline">
+
+      <div class="tl-item fade-in">
+        <div class="tl-dot">★</div>
+        <div class="tl-content">
+          <div class="tl-date">2022 — Present</div>
+          <div class="tl-title">Founder & Lead Developer</div>
+          <div class="tl-company">MHFL Studios (Self-Published)</div>
+          <div class="tl-desc">
+            Founded indie studio. Shipped 4 mobile games on Google Play including Drift Racing Legends,
+            Fruit Slice Merge, Mega Fruit Blast, and Shape Blast Number Game. Responsible for all art,
+            technical art, optimization, marketing, game design, and scripting.
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item fade-in">
+        <div class="tl-dot">★</div>
+        <div class="tl-content">
+          <div class="tl-date">2021</div>
+          <div class="tl-title">Junior AR Developer</div>
+          <div class="tl-company">Beyond (formerly Capitola.Social) — Amsterdam</div>
+          <div class="tl-desc">
+            Created AR effects for Instagram and Snapchat for major brands including Louis Vuitton, McDonald's,
+            Vogue (first AR cover), and Make-a-Wish Nederland. Used Spark AR and Lens Studio with custom shader
+            graphs and JavaScript-based logic systems.
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item fade-in">
+        <div class="tl-dot">★</div>
+        <div class="tl-content">
+          <div class="tl-date">2019 — 2020</div>
+          <div class="tl-title">Art Lead & Technical Artist</div>
+          <div class="tl-company">Saxion University — VR Haptics Project</div>
+          <div class="tl-desc">
+            Led art direction on a VR cyberpunk demo using a prototype haptics suit. Designed the main enemy,
+            gun, grenade, and all environment materials. Handled post-processing, occlusion culling optimisation,
+            and level design. Stepped up as de-facto project manager to ship the final build.
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item fade-in">
+        <div class="tl-dot">★</div>
+        <div class="tl-content">
+          <div class="tl-date">2018</div>
+          <div class="tl-title">Internship — General 3D Artist</div>
+          <div class="tl-company">WizFit / VR Mobile Project</div>
+          <div class="tl-desc">
+            Environmental assets, obstacles, props, lighting, skybox and effects for an Xbox Kinect
+            endless runner. Ported and optimised an existing Unity game from 2008 for Samsung Gear VR,
+            including optimising 3 out of 25 levels for mobile VR performance.
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item fade-in">
+        <div class="tl-dot">★</div>
+        <div class="tl-content">
+          <div class="tl-date">2017</div>
+          <div class="tl-title">Game Art & Design</div>
+          <div class="tl-company">Heim Museum Project — Netherlands</div>
+          <div class="tl-desc">
+            Created all 3D sea-life models (whale, shark, dolphin, eel, jellyfish) with full Maya rig,
+            Unity flipbook eye animation, Substance Painter PBR textures. Game teaches children about sonar
+            and is on display at the Heim Museum, Hengelo.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="services" id="services">
+    <div class="section-label fade-in">What I Do</div>
+    <h2 class="section-title fade-in">Services</h2>
+    <div class="services-grid">
+      <div class="service-card fade-in">
+        <span class="service-num">01</span>
+        <div class="service-icon">🎮</div>
+        <div class="service-title">Game Development</div>
+        <div class="service-desc">End-to-end production using Unity — gameplay systems, mechanics, mobile optimisation, and shipped titles.</div>
+      </div>
+      <div class="service-card fade-in">
+        <span class="service-num">02</span>
+        <div class="service-icon">✦</div>
+        <div class="service-title">Technical Art</div>
+        <div class="service-desc">Custom HLSL shaders, material pipelines, shader graphs, tessellation, displacement and flow effects.</div>
+      </div>
+      <div class="service-card fade-in">
+        <span class="service-num">03</span>
+        <div class="service-icon">⚙</div>
+        <div class="service-title">3D Art & Characters</div>
+        <div class="service-desc">High-poly sculpts, retopology, rigging, PBR texturing, hair systems and clothing simulation.</div>
+      </div>
+      <div class="service-card fade-in">
+        <span class="service-num">04</span>
+        <div class="service-icon">📱</div>
+        <div class="service-title">AR Effects</div>
+        <div class="service-desc">Instagram & Snapchat AR filters using Spark AR and Lens Studio for brands, agencies, and campaigns.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Games -->
+  <section class="live-games" id="games">
+    <div class="section-header">
+      <div>
+        <div class="section-label fade-in">Shipped Titles</div>
+        <h2 class="section-title fade-in">Live on<br>Google Play</h2>
+      </div>
+      <span class="section-count">04</span>
+    </div>
+    <div class="games-grid">
+
+      <a href="https://play.google.com/store/apps/details?id=com.MHFLStudios.DriftLegends" target="_blank" class="game-card fade-in" style="--accent-color:#FF6B35;">
+        <div class="game-badge">FLAGSHIP</div>
+        <canvas class="game-canvas" id="gc-drift"></canvas>
+        <div class="game-info">
+          <div class="game-icon">🏎️</div>
+          <div class="game-details">
+            <div class="game-name">Drift Racing Legends</div>
+            <div class="game-genre">Racing · Open World · Mobile</div>
+          </div>
+        </div>
+        <p class="game-desc">High-action drifting meets relaxing exploration. Real-world locations, world-class cars. Optimized a 4M-vertex environment to run on low-end mobile using light baking, texture atlases &amp; occlusion culling.</p>
+        <div class="game-footer">
+          <span class="game-tag">Unity</span>
+          <span class="game-tag">Light Baking</span>
+          <span class="game-tag">Optimization</span>
+          <span class="game-store-link">Google Play <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <a href="https://play.google.com/store/apps/details?id=com.MHFLStudios.FruitSlice" target="_blank" class="game-card fade-in" style="--accent-color:#FF4D6D;">
+        <canvas class="game-canvas" id="gc-fruit"></canvas>
+        <div class="game-info">
+          <div class="game-icon">🍉</div>
+          <div class="game-details">
+            <div class="game-name">Fruit Slice: Merge Puzzle</div>
+            <div class="game-genre">Puzzle · Casual · All Ages</div>
+          </div>
+        </div>
+        <p class="game-desc">Drop fruits and combine them into bigger fruits. A chill, fun puzzle game good for all ages.</p>
+        <div class="game-footer">
+          <span class="game-tag">Unity</span>
+          <span class="game-tag">2D Physics</span>
+          <span class="game-tag">UI/UX</span>
+          <span class="game-store-link">Google Play <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <a href="https://play.google.com/store/apps/details?id=com.MHFLStudios.StickyFruits" target="_blank" class="game-card fade-in" style="--accent-color:#9B5DE5;">
+        <canvas class="game-canvas" id="gc-blast"></canvas>
+        <div class="game-info">
+          <div class="game-icon">💥</div>
+          <div class="game-details">
+            <div class="game-name">Mega Fruit Blast</div>
+            <div class="game-genre">Puzzle · Quick Play · Arcade</div>
+          </div>
+        </div>
+        <p class="game-desc">Simple and fast puzzle game — destroy connecting fruits. Powerups for extra time and score!</p>
+        <div class="game-footer">
+          <span class="game-tag">Unity</span>
+          <span class="game-tag">Match Logic</span>
+          <span class="game-tag">VFX</span>
+          <span class="game-store-link">Google Play <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <a href="https://play.google.com/store/apps/details?id=com.MHFLStudios.NumberGame" target="_blank" class="game-card fade-in" style="--accent-color:#00BBF9;">
+        <canvas class="game-canvas" id="gc-shape"></canvas>
+        <div class="game-info">
+          <div class="game-icon">🔷</div>
+          <div class="game-details">
+            <div class="game-name">Shape Blast Number Game</div>
+            <div class="game-genre">Shooter · Puzzle · Progression</div>
+          </div>
+        </div>
+        <p class="game-desc">Shooting puzzle — destroy shapes with limited shots. Progressive difficulty with upgrades.</p>
+        <div class="game-footer">
+          <span class="game-tag">Unity</span>
+          <span class="game-tag">Ballistics</span>
+          <span class="game-tag">Level Design</span>
+          <span class="game-store-link">Google Play <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="games-studio-bar fade-in">
+      <span class="studio-label">Published under</span>
+      <span class="studio-name">MHFL Studios</span>
+      <span class="studio-roles">Art · Tech Art · Game Design · Marketing · ASO · Scripting · Optimization</span>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact fade-in" id="contact">
+    <div class="contact-big">
+      Let's Build<br>
+      <span class="outline-text">Something</span><br>
+      Real
+    </div>
+    <p class="contact-email">msaadz96@gmail.com</p>
+    <br>
+    <a href="mailto:msaadz96@gmail.com" class="contact-cta">
+      Get In Touch <span class="arrow">→</span>
+    </a>
+  </section>
+
+  <footer>
+    <span>© 2026 Saad Zafar — Game Dev & Technical Artist</span>
+    <div class="social-links">
+      <a href="https://www.linkedin.com/in/saad-zafar-252a76a3/" target="_blank">in</a>
+      <a href="https://gamerpunker.wordpress.com" target="_blank">W</a>
+      <a href="https://soundcloud.com/txtreme-saad-18" target="_blank">♪</a>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    function makeCanvas(id) {
+      const canvas = document.getElementById(id);
+      if (!canvas) return null;
+      const parent = canvas.parentElement;
+      const rect = parent.getBoundingClientRect();
+      const w = rect.width || 400;
+      const h = rect.height || 300;
+      canvas.width = w * 2;
+      canvas.height = h * 2;
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      const ctx = canvas.getContext('2d');
+      ctx.scale(2, 2);
+      return { ctx, w, h };
+    }
+
+    function rand(min, max) { return Math.random() * (max - min) + min; }
+
+    function drawDrift() {
+      const c = makeCanvas('cv-drift'); if (!c) return;
+      const {ctx,w,h} = c;
+      const bg = ctx.createLinearGradient(0,0,0,h);
+      bg.addColorStop(0,'#050a1a'); bg.addColorStop(1,'#0d1533');
+      ctx.fillStyle = bg; ctx.fillRect(0,0,w,h);
+      ctx.fillStyle = '#111827';
+      ctx.beginPath();
+      ctx.moveTo(w*0.1,h); ctx.lineTo(w*0.4,h*0.5);
+      ctx.lineTo(w*0.6,h*0.5); ctx.lineTo(w*0.9,h); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,240,100,0.5)'; ctx.lineWidth = 2;
+      ctx.setLineDash([12,12]);
+      ctx.beginPath(); ctx.moveTo(w*0.5,h); ctx.lineTo(w*0.5,h*0.5); ctx.stroke();
+      ctx.setLineDash([]);
+      for (let i=0;i<30;i++) {
+        ctx.fillStyle = `rgba(${rand(150,255)},${rand(100,200)},${rand(50,150)},${rand(.2,.5)})`;
+        ctx.fillRect(rand(0,w), rand(0,h*0.45), rand(3,8), rand(10,30));
+      }
+      for (let i=0;i<6;i++) {
+        const grd = ctx.createLinearGradient(0,h*0.55+i*8,w,h*0.55+i*8);
+        grd.addColorStop(0,'rgba(242,196,206,0)');
+        grd.addColorStop(0.5,`rgba(242,196,206,${rand(.1,.3)})`);
+        grd.addColorStop(1,'rgba(242,196,206,0)');
+        ctx.fillStyle = grd; ctx.fillRect(0,h*0.55+i*8,w,2);
+      }
+      ctx.fillStyle = '#F2C4CE';
+      ctx.fillRect(w*0.35,h*0.62,w*0.3,h*0.1);
+      ctx.fillRect(w*0.42,h*0.55,w*0.16,h*0.07);
+      ctx.fillStyle = '#0a0f22';
+      ctx.beginPath(); ctx.arc(w*0.41,h*0.72,h*0.05,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(w*0.59,h*0.72,h*0.05,0,Math.PI*2); ctx.fill();
+      const hl = ctx.createRadialGradient(w*0.62,h*0.67,2,w*0.62,h*0.67,40);
+      hl.addColorStop(0,'rgba(255,240,200,.6)'); hl.addColorStop(1,'rgba(255,240,200,0)');
+      ctx.fillStyle = hl; ctx.fillRect(w*0.55,h*0.5,80,80);
+    }
+
+    function drawVR() {
+      const c = makeCanvas('cv-vr'); if (!c) return;
+      const {ctx,w,h} = c;
+      ctx.fillStyle = '#050810'; ctx.fillRect(0,0,w,h);
+      ctx.strokeStyle = 'rgba(43,68,255,.04)';
+      for (let y=0;y<h;y+=3) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+      ctx.strokeStyle = 'rgba(43,68,255,.25)'; ctx.lineWidth = .5;
+      const vp = {x:w/2, y:h*0.5};
+      for (let i=-6;i<=6;i++) {
+        ctx.beginPath(); ctx.moveTo(w/2+i*(w/6),h); ctx.lineTo(vp.x,vp.y); ctx.stroke();
+      }
+      for (let i=0;i<5;i++) {
+        const y = vp.y + (h-vp.y)*((i+1)/5);
+        ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke();
+      }
+      ctx.strokeStyle = 'rgba(242,196,206,.7)'; ctx.lineWidth = 1.5;
+      const cx=w*0.5, cy=h*0.25;
+      ctx.beginPath(); ctx.arc(cx,cy,14,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cx,cy+14); ctx.lineTo(cx,cy+60);
+      ctx.moveTo(cx-30,cy+28); ctx.lineTo(cx,cy+22); ctx.lineTo(cx+30,cy+34);
+      ctx.moveTo(cx,cy+60); ctx.lineTo(cx-22,cy+100);
+      ctx.moveTo(cx,cy+60); ctx.lineTo(cx+22,cy+100);
+      ctx.stroke();
+      ctx.strokeStyle = 'rgba(43,68,255,.8)'; ctx.lineWidth = 2;
+      ctx.shadowBlur = 8; ctx.shadowColor = '#2B44FF';
+      ctx.strokeRect(cx-18,cy-8,36,12);
+      ctx.shadowBlur = 0;
+      for (let i=0;i<8;i++) {
+        const ox=rand(w*.1,w*.9), oy=rand(h*.1,h*.65);
+        const gr=ctx.createRadialGradient(ox,oy,0,ox,oy,6);
+        gr.addColorStop(0,'rgba(43,68,255,.7)'); gr.addColorStop(1,'rgba(43,68,255,0)');
+        ctx.fillStyle=gr; ctx.fillRect(ox-6,oy-6,12,12);
+        ctx.fillStyle='#2B44FF'; ctx.beginPath(); ctx.arc(ox,oy,2,0,Math.PI*2); ctx.fill();
+      }
+      ctx.strokeStyle='rgba(242,196,206,.4)'; ctx.lineWidth=1;
+      ctx.shadowBlur=10; ctx.shadowColor='#F2C4CE';
+      ctx.beginPath(); ctx.moveTo(0,h*0.5); ctx.lineTo(w,h*0.5); ctx.stroke();
+      ctx.shadowBlur=0;
+    }
+
+    function drawAR() {
+      const c = makeCanvas('cv-ar'); if (!c) return;
+      const {ctx,w,h} = c;
+      ctx.fillStyle='#0a0512'; ctx.fillRect(0,0,w,h);
+      ctx.strokeStyle='rgba(242,196,206,.4)'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.ellipse(w/2,h*0.45,w*0.22,h*0.3,0,0,Math.PI*2); ctx.stroke();
+      const dots = [
+        [w/2,h*.18],[w*.38,h*.28],[w*.62,h*.28],
+        [w*.33,h*.42],[w*.67,h*.42],[w*.42,h*.54],[w*.58,h*.54],
+        [w*.5,h*.6],[w*.38,h*.65],[w*.62,h*.65]
+      ];
+      ctx.fillStyle='rgba(43,68,255,.8)';
+      dots.forEach(([x,y])=>{ ctx.beginPath(); ctx.arc(x,y,2.5,0,Math.PI*2); ctx.fill(); });
+      ctx.strokeStyle='rgba(43,68,255,.2)'; ctx.lineWidth=.7;
+      for (let i=0;i<dots.length;i++) {
+        for (let j=i+1;j<dots.length;j++) {
+          const d=Math.hypot(dots[i][0]-dots[j][0],dots[i][1]-dots[j][1]);
+          if (d<w*0.3) {
+            ctx.beginPath(); ctx.moveTo(dots[i][0],dots[i][1]); ctx.lineTo(dots[j][0],dots[j][1]); ctx.stroke();
+          }
+        }
+      }
+      for (let i=0;i<20;i++) {
+        const px=rand(w*.15,w*.85), py=rand(h*.05,h*.85);
+        const size=rand(3,8);
+        ctx.strokeStyle=`rgba(242,196,206,${rand(.3,.8)})`; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.moveTo(px,py-size); ctx.lineTo(px,py+size); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(px-size,py); ctx.lineTo(px+size,py); ctx.stroke();
+      }
+      ctx.strokeStyle='rgba(242,196,206,.12)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.ellipse(w/2,h*.45,w*.35,h*.45,0,0,Math.PI*2); ctx.stroke();
+      ctx.strokeStyle='rgba(43,68,255,.15)';
+      ctx.beginPath(); ctx.ellipse(w/2,h*.45,w*.42,h*.52,0,0,Math.PI*2); ctx.stroke();
+    }
+
+    function drawTerrain() {
+      const c = makeCanvas('cv-terrain'); if (!c) return;
+      const {ctx,w,h} = c;
+      ctx.fillStyle='#0b140b'; ctx.fillRect(0,0,w,h);
+      const sky=ctx.createLinearGradient(0,0,0,h*0.5);
+      sky.addColorStop(0,'rgba(5,8,30,1)'); sky.addColorStop(1,'rgba(20,35,60,.8)');
+      ctx.fillStyle=sky; ctx.fillRect(0,0,w,h*0.5);
+      for (let i=0;i<40;i++) {
+        ctx.fillStyle=`rgba(255,255,255,${rand(.2,.7)})`;
+        ctx.beginPath(); ctx.arc(rand(0,w),rand(0,h*.4),rand(.5,1.5),0,Math.PI*2); ctx.fill();
+      }
+      const cols = ['rgba(20,40,20,.9)','rgba(30,55,28,.85)','rgba(45,75,40,.8)','rgba(60,95,55,.75)'];
+      cols.forEach((col,i) => {
+        ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(0,h);
+        const base=h*(0.35+i*.12);
+        for (let x=0;x<=w;x+=8) {
+          ctx.lineTo(x, base + Math.sin(x*.02+i*1.5)*30 + Math.sin(x*.05+i)*15 - i*5);
+        }
+        ctx.lineTo(w,h); ctx.fill();
+      });
+      ctx.fillStyle='rgba(43,68,255,.15)';
+      ctx.fillRect(w*.05,h*.05,w*.3,h*.2);
+      ctx.strokeStyle='rgba(43,68,255,.4)'; ctx.lineWidth=1;
+      ctx.strokeRect(w*.05,h*.05,w*.3,h*.2);
+      for (let i=0;i<3;i++) {
+        ctx.fillStyle='rgba(242,196,206,.4)';
+        ctx.fillRect(w*.07+i*w*.08,h*.1,w*.05,h*.08);
+        ctx.strokeStyle='rgba(242,196,206,.3)'; ctx.lineWidth=.5;
+        ctx.strokeRect(w*.07+i*w*.08,h*.1,w*.05,h*.08);
+        if (i<2) {
+          ctx.strokeStyle='rgba(242,196,206,.2)'; ctx.lineWidth=1;
+          ctx.beginPath();
+          ctx.moveTo(w*.12+i*w*.08,h*.14); ctx.lineTo(w*.14+i*w*.08,h*.14); ctx.stroke();
+        }
+      }
+    }
+
+    function drawAqua() {
+      const c = makeCanvas('cv-aqua'); if (!c) return;
+      const {ctx,w,h} = c;
+      const ocean=ctx.createLinearGradient(0,0,0,h);
+      ocean.addColorStop(0,'#051520'); ocean.addColorStop(1,'#0a2840');
+      ctx.fillStyle=ocean; ctx.fillRect(0,0,w,h);
+      for (let i=0;i<15;i++) {
+        ctx.strokeStyle=`rgba(43,68,255,${rand(.05,.15)})`; ctx.lineWidth=1;
+        const x=rand(0,w), y=rand(0,h*.5);
+        ctx.beginPath(); ctx.ellipse(x,y,rand(10,25),rand(5,12),rand(0,Math.PI),0,Math.PI*2); ctx.stroke();
+      }
+      ctx.fillStyle='rgba(100,150,200,.3)';
+      ctx.beginPath(); ctx.ellipse(w*0.5,h*0.35,w*0.28,h*0.11,0,0,Math.PI*2); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(w*0.22,h*0.35); ctx.lineTo(w*0.1,h*0.25); ctx.lineTo(w*0.1,h*0.45); ctx.fill();
+      for (let i=0;i<8;i++) {
+        const fx=rand(w*.1,w*.9), fy=rand(h*.5,h*.9), fs=rand(8,16);
+        ctx.fillStyle=`rgba(242,196,206,${rand(.15,.4)})`;
+        ctx.beginPath(); ctx.ellipse(fx,fy,fs,fs*0.45,0,0,Math.PI*2); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(fx-fs,fy); ctx.lineTo(fx-fs*1.5,fy-fs*.4); ctx.lineTo(fx-fs*1.5,fy+fs*.4); ctx.fill();
+      }
+      for (let i=0;i<12;i++) {
+        ctx.strokeStyle=`rgba(242,196,206,${rand(.1,.3)})`; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.arc(rand(w*.2,w*.8),rand(h*.3,h*.9),rand(2,6),0,Math.PI*2); ctx.stroke();
+      }
+    }
+
+    function drawPortrait() {
+      const c = makeCanvas('cv-portrait'); if (!c) return;
+      const {ctx,w,h} = c;
+      ctx.fillStyle='#12080f'; ctx.fillRect(0,0,w,h);
+      const bg=ctx.createRadialGradient(w*.5,h*.4,20,w*.5,h*.4,h*.8);
+      bg.addColorStop(0,'rgba(80,30,50,.4)'); bg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
+      const hg=ctx.createRadialGradient(w*.5,h*.38,10,w*.5,h*.38,h*.35);
+      hg.addColorStop(0,'rgba(200,140,120,.55)');
+      hg.addColorStop(0.6,'rgba(180,110,95,.35)');
+      hg.addColorStop(1,'rgba(150,80,70,0)');
+      ctx.fillStyle=hg;
+      ctx.beginPath(); ctx.ellipse(w*.5,h*.38,w*.16,h*.22,0,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='rgba(60,30,20,.6)'; ctx.lineWidth=8;
+      for (let i=0;i<6;i++) {
+        const sx=w*.5+rand(-w*.12,w*.12);
+        ctx.beginPath(); ctx.moveTo(sx,h*.1); ctx.quadraticCurveTo(sx+rand(-20,20),h*.2,w*.5+rand(-w*.15,w*.15),h*.55); ctx.stroke();
+      }
+      ctx.fillStyle='rgba(43,68,255,.6)';
+      ctx.beginPath(); ctx.ellipse(w*.43,h*.36,5,3.5,0,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(w*.57,h*.36,5,3.5,0,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='rgba(242,196,206,.15)'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.ellipse(w*.5,h*.38,w*.18,h*.24,0,0,Math.PI*2); ctx.stroke();
+      ctx.fillStyle='rgba(43,68,255,.1)';
+      ctx.fillRect(w*.65,h*.1,w*.28,h*.25);
+      ctx.strokeStyle='rgba(43,68,255,.3)'; ctx.lineWidth=.5;
+      ctx.strokeRect(w*.65,h*.1,w*.28,h*.25);
+      ctx.fillStyle='rgba(242,196,206,.4)'; ctx.font='8px Space Grotesk';
+      ctx.fillText('IRIS SHADER',w*.67,h*.14);
+    }
+
+    function drawHerder() {
+      const c = makeCanvas('cv-herder'); if (!c) return;
+      const {ctx,w,h} = c;
+      ctx.fillStyle='#0a0c10'; ctx.fillRect(0,0,w,h);
+      const sky=ctx.createLinearGradient(0,0,0,h*.5);
+      sky.addColorStop(0,'#1a0e05'); sky.addColorStop(1,'#3d2510');
+      ctx.fillStyle=sky; ctx.fillRect(0,0,w,h*.5);
+      const gnd=ctx.createLinearGradient(0,h*.5,0,h);
+      gnd.addColorStop(0,'#2a1a08'); gnd.addColorStop(1,'#1a0f05');
+      ctx.fillStyle=gnd; ctx.fillRect(0,h*.5,w,h*.5);
+      const cg=ctx.createRadialGradient(w*.5,h*.35,5,w*.5,h*.35,h*.4);
+      cg.addColorStop(0,'rgba(200,140,80,.3)'); cg.addColorStop(1,'rgba(200,140,80,0)');
+      ctx.fillStyle=cg; ctx.fillRect(0,0,w,h);
+      ctx.fillStyle='rgba(180,120,60,.4)';
+      ctx.beginPath();
+      ctx.moveTo(w*.4,h*.15); ctx.quadraticCurveTo(w*.35,h*.45,w*.28,h*.7);
+      ctx.lineTo(w*.72,h*.7); ctx.quadraticCurveTo(w*.65,h*.45,w*.6,h*.15); ctx.fill();
+      ctx.fillStyle='rgba(190,130,80,.5)';
+      ctx.beginPath(); ctx.arc(w*.5,h*.13,h*.06,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='rgba(140,90,45,.6)';
+      ctx.beginPath(); ctx.ellipse(w*.5,h*.11,h*.065,h*.03,0,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='rgba(255,200,120,.2)'; ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.moveTo(w*.4,h*.15); ctx.quadraticCurveTo(w*.3,h*.4,w*.28,h*.7); ctx.stroke();
+      const sss=ctx.createRadialGradient(w*.56,h*.13,1,w*.56,h*.13,15);
+      sss.addColorStop(0,'rgba(255,80,60,.25)'); sss.addColorStop(1,'rgba(255,80,60,0)');
+      ctx.fillStyle=sss; ctx.fillRect(w*.45,h*.05,30,30);
+    }
+
+    function drawBMW() {
+      const c = makeCanvas('cv-bmw'); if (!c) return;
+      const {ctx,w,h} = c;
+      ctx.fillStyle='#080808'; ctx.fillRect(0,0,w,h);
+      const fl=ctx.createLinearGradient(0,h*.55,0,h);
+      fl.addColorStop(0,'rgba(30,30,30,.8)'); fl.addColorStop(1,'rgba(5,5,5,1)');
+      ctx.fillStyle=fl; ctx.fillRect(0,h*.55,w,h*.45);
+      ctx.fillStyle='rgba(180,180,200,.85)';
+      ctx.beginPath();
+      ctx.moveTo(w*.08,h*.65); ctx.lineTo(w*.15,h*.4);
+      ctx.quadraticCurveTo(w*.25,h*.3,w*.42,h*.28);
+      ctx.lineTo(w*.68,h*.28); ctx.quadraticCurveTo(w*.82,h*.3,w*.88,h*.4);
+      ctx.lineTo(w*.92,h*.65); ctx.closePath(); ctx.fill();
+      ctx.fillStyle='rgba(100,130,180,.5)';
+      ctx.beginPath();
+      ctx.moveTo(w*.42,h*.28); ctx.lineTo(w*.38,h*.38);
+      ctx.lineTo(w*.56,h*.38); ctx.lineTo(w*.6,h*.28); ctx.fill();
+      ctx.fillStyle='#1a1a1a';
+      ctx.beginPath(); ctx.arc(w*.22,h*.66,h*.1,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(w*.75,h*.66,h*.1,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='rgba(200,200,200,.4)'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(w*.22,h*.66,h*.07,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(w*.75,h*.66,h*.07,0,Math.PI*2); ctx.stroke();
+      const ll=ctx.createRadialGradient(w*.1,h*.1,5,w*.1,h*.1,w*.6);
+      ll.addColorStop(0,'rgba(255,255,255,.12)'); ll.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle=ll; ctx.fillRect(0,0,w,h);
+      ctx.fillStyle='rgba(180,180,200,.08)';
+      ctx.beginPath(); ctx.ellipse(w*.5,h*.73,w*.35,h*.05,0,0,Math.PI*2); ctx.fill();
+    }
+
+    function drawShader() {
+      const c = makeCanvas('cv-shader'); if (!c) return;
+      const {ctx,w,h} = c;
+      ctx.fillStyle='#0d1a0d'; ctx.fillRect(0,0,w,h);
+      for (let row=0;row<6;row++) {
+        for (let col=0;col<8;col++) {
+          const x=col*(w/8), y=h*.35+row*(h*.11);
+          const bright=0.15+Math.random()*.15;
+          ctx.fillStyle=`rgba(40,80,40,${bright})`;
+          ctx.beginPath();
+          ctx.moveTo(x+w/16,y); ctx.lineTo(x+w/8,y+h*.055);
+          ctx.lineTo(x+w/16,y+h*.11); ctx.lineTo(x,y+h*.055); ctx.fill();
+          ctx.strokeStyle='rgba(100,160,100,.2)'; ctx.lineWidth=.5; ctx.stroke();
+        }
+      }
+      ctx.strokeStyle='rgba(150,220,255,.5)'; ctx.lineWidth=1;
+      for (let i=0;i<18;i++) {
+        const rx=rand(0,w), ry=rand(h*.3,h*.8), rl=rand(8,20);
+        ctx.beginPath(); ctx.moveTo(rx,ry); ctx.lineTo(rx+rand(-3,3),ry+rl); ctx.stroke();
+      }
+      const sheen=ctx.createLinearGradient(0,h*.35,w,h*.9);
+      sheen.addColorStop(0,'rgba(255,255,255,0)');
+      sheen.addColorStop(.45,'rgba(255,255,255,.08)');
+      sheen.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle=sheen; ctx.fillRect(0,h*.35,w,h*.65);
+      ctx.fillStyle='rgba(43,68,255,.15)';
+      ctx.fillRect(w*.03,h*.04,w*.45,h*.22);
+      ctx.strokeStyle='rgba(43,68,255,.4)'; ctx.lineWidth=.8;
+      ctx.strokeRect(w*.03,h*.04,w*.45,h*.22);
+      ctx.fillStyle='rgba(242,196,206,.5)'; ctx.font='7px monospace';
+      ['#pragma surface surf','  tessellate:tessFixed','  float _Tess = 4;','  flowmap uv warp'].forEach((line,i)=>{
+        ctx.fillText(line, w*.05, h*.09+i*10);
+      });
+    }
+
+    function drawAstro() {
+      const c = makeCanvas('cv-astro'); if (!c) return;
+      const {ctx,w,h} = c;
+      ctx.fillStyle='#03050f'; ctx.fillRect(0,0,w,h);
+      for (let i=0;i<60;i++) {
+        ctx.fillStyle=`rgba(255,255,255,${rand(.3,.8)})`;
+        ctx.beginPath(); ctx.arc(rand(0,w),rand(0,h),rand(.5,1.5),0,Math.PI*2); ctx.fill();
+      }
+      const neb=ctx.createRadialGradient(w*.3,h*.4,5,w*.3,h*.4,w*.3);
+      neb.addColorStop(0,'rgba(43,68,255,.12)'); neb.addColorStop(1,'rgba(43,68,255,0)');
+      ctx.fillStyle=neb; ctx.fillRect(0,0,w,h);
+      ctx.fillStyle='rgba(100,80,60,.6)';
+      ctx.beginPath(); ctx.arc(w*.75,h*.25,h*.08,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='rgba(150,120,90,.3)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.arc(w*.75,h*.25,h*.11,0,Math.PI*2); ctx.stroke();
+      ctx.fillStyle='rgba(242,196,206,.8)';
+      ctx.beginPath();
+      ctx.moveTo(w*.5,h*.55); ctx.lineTo(w*.44,h*.68);
+      ctx.lineTo(w*.5,h*.64); ctx.lineTo(w*.56,h*.68); ctx.closePath(); ctx.fill();
+      const eg=ctx.createRadialGradient(w*.5,h*.67,2,w*.5,h*.67,15);
+      eg.addColorStop(0,'rgba(43,68,255,.8)'); eg.addColorStop(1,'rgba(43,68,255,0)');
+      ctx.fillStyle=eg; ctx.fillRect(w*.43,h*.62,14,20);
+      for (let i=0;i<6;i++) {
+        const ex=rand(w*.05,w*.95), ey=rand(h*.1,h*.45), es=rand(6,14);
+        ctx.strokeStyle=`rgba(200,100,80,${rand(.4,.7)})`; ctx.lineWidth=1.5;
+        ctx.strokeRect(ex-es/2,ey-es/2,es,es);
+        ctx.beginPath();
+        ctx.moveTo(ex-es*.3,ey-es*.3); ctx.lineTo(ex+es*.3,ey+es*.3);
+        ctx.moveTo(ex+es*.3,ey-es*.3); ctx.lineTo(ex-es*.3,ey+es*.3); ctx.stroke();
+      }
+      ctx.fillStyle='rgba(255,240,100,.8)';
+      ctx.fillRect(w*.49,h*.42,3,12);
+    }
+
+    // ── Live Games canvases ──
+    function drawGameCanvas(id, drawFn) {
+      const canvas = document.getElementById(id);
+      if (!canvas) return;
+      const parent = canvas.parentElement;
+      canvas.width = 800; canvas.height = 280;
+      canvas.style.width = '100%'; canvas.style.height = '140px';
+      const ctx = canvas.getContext('2d');
+      ctx.scale(1,1);
+      drawFn(ctx, 800, 280);
+    }
+
+    function drawGCDrift(ctx, w, h) {
+      const bg = ctx.createLinearGradient(0,0,w,h);
+      bg.addColorStop(0,'#1a0800'); bg.addColorStop(0.5,'#2d1200'); bg.addColorStop(1,'#0d0500');
+      ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
+      ctx.fillStyle='#1f1008';
+      ctx.beginPath(); ctx.moveTo(0,h); ctx.lineTo(w*0.3,h*0.4); ctx.lineTo(w*0.7,h*0.4); ctx.lineTo(w,h); ctx.fill();
+      ctx.strokeStyle='rgba(255,200,50,.35)'; ctx.lineWidth=3; ctx.setLineDash([20,20]);
+      ctx.beginPath(); ctx.moveTo(w*0.5,h); ctx.lineTo(w*0.5,h*0.4); ctx.stroke(); ctx.setLineDash([]);
+      for (let i=0;i<20;i++) {
+        ctx.fillStyle=`rgba(255,${100+Math.random()*80},0,${.15+Math.random()*.2})`;
+        const x=Math.random()*w, y=Math.random()*h*0.35;
+        ctx.fillRect(x,y,Math.random()*6+2,Math.random()*20+8);
+      }
+      ctx.fillStyle='rgba(255,107,53,.25)';
+      ctx.beginPath(); ctx.ellipse(w*0.5,h*0.75,w*0.15,h*0.06,0,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='rgba(255,107,53,.5)'; ctx.lineWidth=2;
+      ctx.strokeRect(w*0.35,h*0.55,w*0.3,h*0.18);
+      for (let i=0;i<8;i++) { ctx.fillStyle=`rgba(255,240,200,${.3+Math.random()*.5})`; ctx.beginPath(); ctx.arc(Math.random()*w,Math.random()*h*.35,1,0,Math.PI*2); ctx.fill(); }
+    }
+
+    function drawGCFruit(ctx, w, h) {
+      const bg = ctx.createLinearGradient(0,0,0,h);
+      bg.addColorStop(0,'#1a0515'); bg.addColorStop(1,'#0d0a18');
+      ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
+      const fruits = [
+        {x:w*.15,y:h*.5,r:28,color:'rgba(255,77,109,.7)'},
+        {x:w*.35,y:h*.35,r:22,color:'rgba(255,200,50,.7)'},
+        {x:w*.5,y:h*.6,r:34,color:'rgba(50,205,50,.6)'},
+        {x:w*.65,y:h*.4,r:20,color:'rgba(255,165,0,.7)'},
+        {x:w*.8,y:h*.55,r:26,color:'rgba(138,43,226,.6)'},
+        {x:w*.25,y:h*.7,r:18,color:'rgba(255,99,71,.6)'},
+        {x:w*.7,y:h*.72,r:16,color:'rgba(0,191,255,.5)'},
+      ];
+      fruits.forEach(f => {
+        const g = ctx.createRadialGradient(f.x-f.r*.2,f.y-f.r*.2,2,f.x,f.y,f.r);
+        g.addColorStop(0,'rgba(255,255,255,.15)'); g.addColorStop(.5,f.color); g.addColorStop(1,'rgba(0,0,0,.1)');
+        ctx.fillStyle=g; ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,Math.PI*2); ctx.fill();
+      });
+      ctx.strokeStyle='rgba(255,77,109,.12)'; ctx.lineWidth=1;
+      for (let i=0;i<fruits.length;i++) for (let j=i+1;j<fruits.length;j++) {
+        if (Math.hypot(fruits[i].x-fruits[j].x,fruits[i].y-fruits[j].y)<w*.3) {
+          ctx.beginPath(); ctx.moveTo(fruits[i].x,fruits[i].y); ctx.lineTo(fruits[j].x,fruits[j].y); ctx.stroke();
+        }
+      }
+      for (let i=0;i<15;i++) { ctx.fillStyle=`rgba(255,255,255,${.1+Math.random()*.15})`; ctx.beginPath(); ctx.arc(Math.random()*w,Math.random()*h,Math.random()*2+1,0,Math.PI*2); ctx.fill(); }
+    }
+
+    function drawGCBlast(ctx, w, h) {
+      ctx.fillStyle='#0a0318'; ctx.fillRect(0,0,w,h);
+      for (let i=0;i<12;i++) {
+        const x=Math.random()*w, y=Math.random()*h, r=10+Math.random()*20;
+        const g = ctx.createRadialGradient(x,y,0,x,y,r);
+        g.addColorStop(0,`rgba(155,93,229,${.2+Math.random()*.3})`); g.addColorStop(1,'rgba(155,93,229,0)');
+        ctx.fillStyle=g; ctx.fillRect(x-r,y-r,r*2,r*2);
+      }
+      for (let i=0;i<8;i++) {
+        const cx=w*.15+Math.random()*w*.7, cy=h*.2+Math.random()*h*.6, s=12+Math.random()*18;
+        ctx.fillStyle=`rgba(${150+Math.random()*105},${50+Math.random()*100},${180+Math.random()*75},${.4+Math.random()*.3})`;
+        ctx.beginPath(); ctx.arc(cx,cy,s,0,Math.PI*2); ctx.fill();
+      }
+      for (let i=0;i<6;i++) {
+        const sx=Math.random()*w, sy=Math.random()*h;
+        ctx.strokeStyle=`rgba(255,255,100,${.2+Math.random()*.3})`; ctx.lineWidth=2;
+        ctx.beginPath();
+        for (let j=0;j<4;j++) { ctx.lineTo(sx+Math.random()*30-15, sy+Math.random()*30-15); }
+        ctx.stroke();
+      }
+    }
+
+    function drawGCShape(ctx, w, h) {
+      const bg = ctx.createLinearGradient(0,0,w,h);
+      bg.addColorStop(0,'#001220'); bg.addColorStop(1,'#000a15');
+      ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
+      const shapes = [
+        {x:w*.2,y:h*.4,sides:6,r:30,color:'rgba(0,187,249,.5)'},
+        {x:w*.45,y:h*.55,sides:4,r:24,color:'rgba(0,187,249,.4)'},
+        {x:w*.65,y:h*.35,sides:3,r:28,color:'rgba(0,187,249,.6)'},
+        {x:w*.8,y:h*.6,sides:5,r:22,color:'rgba(0,187,249,.35)'},
+        {x:w*.35,y:h*.75,sides:8,r:16,color:'rgba(0,187,249,.3)'},
+      ];
+      shapes.forEach(s => {
+        ctx.fillStyle=s.color; ctx.strokeStyle='rgba(0,187,249,.6)'; ctx.lineWidth=1.5;
+        ctx.beginPath();
+        for (let i=0;i<=s.sides;i++) {
+          const angle=(Math.PI*2/s.sides)*i - Math.PI/2;
+          const px=s.x+Math.cos(angle)*s.r, py=s.y+Math.sin(angle)*s.r;
+          i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+        }
+        ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='rgba(255,255,255,.7)'; ctx.font='bold 14px Syne'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(Math.floor(Math.random()*50+10),s.x,s.y);
+      });
+      ctx.strokeStyle='rgba(0,187,249,.15)'; ctx.lineWidth=1;
+      for (let i=0;i<6;i++) {
+        ctx.beginPath(); ctx.arc(w*.15,h*.85,5+i*8,0,Math.PI*2); ctx.stroke();
+      }
+      ctx.fillStyle='rgba(255,200,50,.6)';
+      ctx.beginPath(); ctx.moveTo(w*.12,h*.2); ctx.lineTo(w*.12,h*.2-18); ctx.lineTo(w*.2,h*.2-10);
+      ctx.closePath(); ctx.fill();
+    }
+
+    function drawAll() {
+      drawDrift(); drawVR(); drawAR(); drawTerrain(); drawAqua();
+      drawPortrait(); drawHerder(); drawBMW(); drawShader(); drawAstro();
+      drawGameCanvas('gc-drift', drawGCDrift);
+      drawGameCanvas('gc-fruit', drawGCFruit);
+      drawGameCanvas('gc-blast', drawGCBlast);
+      drawGameCanvas('gc-shape', drawGCShape);
+    }
+
+    window.addEventListener('load', drawAll);
+    window.addEventListener('resize', () => setTimeout(drawAll, 100));
+  </script>
+</body>
+</html>
