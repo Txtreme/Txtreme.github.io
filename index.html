@@ -30,7 +30,312 @@
     ::-webkit-scrollbar-track { background: var(--blue-dark); }
     ::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 4px; }
 
-    /* ── Marquee top ── */
+    /* ===== ADMIN PANEL STYLES ===== */
+    .admin-bar {
+      display: none;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 99999;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      padding: 10px 24px;
+      border-bottom: 2px solid var(--accent);
+      font-family: 'Space Grotesk', sans-serif;
+      align-items: center; gap: 14px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.5);
+    }
+    body.admin-mode .admin-bar { display: flex; }
+    body.admin-mode { padding-top: 52px; }
+    .admin-bar .admin-label {
+      background: var(--accent); color: white;
+      padding: 4px 12px; border-radius: 40px;
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; font-family: 'Syne', sans-serif;
+    }
+    .admin-bar .admin-status {
+      color: #aaa; font-size: 12px; flex: 1;
+    }
+    .admin-bar button {
+      padding: 6px 16px; border-radius: 6px; border: none;
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+      cursor: pointer; transition: background .2s, transform .2s;
+    }
+    .admin-bar button:hover { transform: scale(1.04); }
+    .admin-btn-save { background: #00c853; color: white; }
+    .admin-btn-reset { background: #ff5252; color: white; }
+    .admin-btn-exit { background: rgba(255,255,255,.15); color: white; }
+    .admin-btn-add { background: var(--accent); color: white; }
+
+    .admin-login-overlay {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10,15,30,.95); z-index: 100000;
+      align-items: center; justify-content: center;
+      backdrop-filter: blur(12px);
+    }
+    .admin-login-overlay.active { display: flex; }
+    .admin-login-box {
+      background: #16213e; border-radius: 18px; padding: 40px;
+      border: 1px solid rgba(242,196,206,.15); text-align: center;
+      max-width: 380px; width: 90%;
+    }
+    .admin-login-box h3 {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 22px; text-transform: uppercase; letter-spacing: 1px;
+      color: var(--pink); margin-bottom: 8px;
+    }
+    .admin-login-box p { font-size: 13px; opacity: .5; margin-bottom: 24px; }
+    .admin-login-box input {
+      width: 100%; padding: 14px 18px; border-radius: 10px;
+      border: 1px solid rgba(242,196,206,.2); background: rgba(255,255,255,.06);
+      color: white; font-family: 'Space Grotesk', sans-serif; font-size: 15px;
+      outline: none; margin-bottom: 16px; text-align: center;
+      letter-spacing: 4px;
+    }
+    .admin-login-box input:focus { border-color: var(--accent); }
+    .admin-login-box .login-btn {
+      background: var(--accent); color: white; border: none;
+      padding: 14px 36px; border-radius: 50px;
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 14px; letter-spacing: 1px; text-transform: uppercase;
+      cursor: pointer; width: 100%; transition: transform .2s;
+    }
+    .admin-login-box .login-btn:hover { transform: scale(1.03); }
+    .admin-login-box .login-error {
+      color: #ff5252; font-size: 12px; margin-top: 10px; display: none;
+    }
+    .admin-login-box .login-close {
+      position: absolute; top: 16px; right: 20px;
+      background: none; border: none; color: white; font-size: 20px;
+      cursor: pointer; opacity: .5;
+    }
+
+    /* Editable highlights in admin mode */
+    body.admin-mode [data-editable] {
+      position: relative;
+      cursor: text;
+      transition: outline .2s, background .2s;
+      outline: 1px dashed transparent;
+      border-radius: 4px;
+    }
+    body.admin-mode [data-editable]:hover {
+      outline: 1px dashed var(--accent);
+      background: rgba(43,68,255,.08);
+    }
+    body.admin-mode [data-editable]:focus {
+      outline: 2px solid var(--accent);
+      background: rgba(43,68,255,.12);
+    }
+    body.admin-mode [data-editable]::after {
+      content: '✎';
+      position: absolute; top: -8px; right: -8px;
+      background: var(--accent); color: white;
+      width: 18px; height: 18px; border-radius: 50%;
+      font-size: 10px; display: none;
+      align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    body.admin-mode [data-editable]:hover::after { display: flex; }
+
+    /* Admin section controls */
+    .admin-section-controls {
+      display: none;
+      gap: 8px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    body.admin-mode .admin-section-controls { display: flex; }
+    .admin-section-controls button {
+      padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(242,196,206,.2);
+      background: rgba(43,68,255,.15); color: var(--pink);
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+      cursor: pointer; transition: all .2s;
+    }
+    .admin-section-controls button:hover {
+      background: var(--accent); color: white; border-color: var(--accent);
+    }
+    .admin-section-controls button.danger { background: rgba(255,82,82,.15); }
+    .admin-section-controls button.danger:hover { background: #ff5252; }
+
+    /* Item-level admin controls */
+    .admin-item-controls {
+      display: none;
+      gap: 6px; margin-top: 10px;
+    }
+    body.admin-mode .admin-item-controls { display: flex; }
+    .admin-item-controls button {
+      padding: 4px 10px; border-radius: 4px; border: none;
+      font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+      font-size: 10px; cursor: pointer; transition: all .2s;
+    }
+    .admin-item-controls .btn-del { background: rgba(255,82,82,.2); color: #ff5252; }
+    .admin-item-controls .btn-del:hover { background: #ff5252; color: white; }
+    .admin-item-controls .btn-move { background: rgba(255,255,255,.1); color: var(--pink); }
+    .admin-item-controls .btn-move:hover { background: rgba(255,255,255,.2); }
+
+    /* Toast notification */
+    .admin-toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: #1a1a2e; color: white; padding: 14px 28px; border-radius: 10px;
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px;
+      letter-spacing: 1px; text-transform: uppercase;
+      border: 1px solid var(--accent); z-index: 100001;
+      transition: transform .4s cubic-bezier(.25,.46,.45,.94), opacity .4s;
+      opacity: 0; pointer-events: none;
+    }
+    .admin-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* Settings modal */
+    .admin-settings-overlay {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10,15,30,.92); z-index: 100000;
+      align-items: center; justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+    .admin-settings-overlay.active { display: flex; }
+    .admin-settings-box {
+      background: #16213e; border-radius: 18px; padding: 36px;
+      border: 1px solid rgba(242,196,206,.15);
+      max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;
+    }
+    .admin-settings-box h3 {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 20px; text-transform: uppercase; color: var(--pink); margin-bottom: 20px;
+    }
+    .admin-settings-box label {
+      display: block; font-size: 11px; letter-spacing: 2px;
+      text-transform: uppercase; opacity: .5; margin-bottom: 6px; margin-top: 16px;
+    }
+    .admin-settings-box input, .admin-settings-box textarea {
+      width: 100%; padding: 10px 14px; border-radius: 8px;
+      border: 1px solid rgba(242,196,206,.2); background: rgba(255,255,255,.06);
+      color: white; font-family: 'Space Grotesk', sans-serif; font-size: 13px;
+      outline: none;
+    }
+    .admin-settings-box textarea { min-height: 80px; resize: vertical; }
+    .admin-settings-box input:focus, .admin-settings-box textarea:focus { border-color: var(--accent); }
+    .settings-actions { display: flex; gap: 10px; margin-top: 24px; }
+    .settings-actions button {
+      flex: 1; padding: 12px; border-radius: 8px; border: none;
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 12px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer;
+    }
+    .settings-save { background: var(--accent); color: white; }
+    .settings-cancel { background: rgba(255,255,255,.1); color: white; }
+
+    /* PROJECT MODAL */
+    .project-modal-overlay {
+      display: none;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10,15,30,.92);
+      z-index: 10000;
+      overflow-y: auto;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .project-modal-overlay.active { display: block; }
+    body.modal-open { overflow: hidden; }
+
+    .project-modal {
+      max-width: 900px; margin: 40px auto; padding: 0 24px 60px;
+      position: relative;
+    }
+    .modal-close {
+      position: fixed; top: 24px; right: 32px;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--accent); color: white; border: none;
+      font-size: 22px; cursor: pointer; z-index: 10001;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .3s;
+      font-family: 'Syne', sans-serif; font-weight: 700;
+    }
+    .modal-close:hover { transform: scale(1.1) rotate(90deg); }
+
+    .modal-hero-img {
+      width: 100%; border-radius: 18px; margin-top: 20px;
+      max-height: 480px; object-fit: contain; display: block;
+      background: rgba(0,0,0,.3);
+    }
+    .modal-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+    .modal-tag {
+      background: rgba(242,196,206,.12); color: var(--pink-light);
+      padding: 5px 14px; border-radius: 40px; font-size: 11px;
+      letter-spacing: 1px; text-transform: uppercase; font-weight: 600;
+    }
+    .modal-title {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(28px, 4vw, 48px); text-transform: uppercase;
+      letter-spacing: -1px; line-height: 1.05; margin-top: 24px;
+      color: var(--pink);
+    }
+    .modal-subtitle {
+      font-size: 14px; opacity: .5; margin-top: 8px;
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    .modal-body { margin-top: 28px; }
+    .modal-body h3 {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 18px; text-transform: uppercase; margin: 28px 0 12px;
+      color: var(--pink);
+    }
+    .modal-body p {
+      font-size: 15px; line-height: 1.8; opacity: .82;
+      color: var(--pink-light); max-width: 720px;
+    }
+    .modal-body ul {
+      list-style: none; padding: 0; margin: 10px 0;
+    }
+    .modal-body ul li {
+      font-size: 14px; line-height: 1.8; opacity: .78;
+      color: var(--pink-light); padding-left: 20px; position: relative;
+    }
+    .modal-body ul li::before {
+      content: '▸'; position: absolute; left: 0; color: var(--accent);
+      font-weight: 700;
+    }
+    .modal-gallery {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px; margin-top: 20px;
+    }
+    .modal-gallery img {
+      width: 100%; border-radius: 10px; object-fit: contain;
+      background: rgba(0,0,0,.25); display: block;
+      max-height: 500px;
+    }
+    .modal-gallery.single { grid-template-columns: 1fr; }
+    .modal-gallery.triple { grid-template-columns: 1fr 1fr 1fr; }
+    .modal-gallery.auto-rows {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+
+    .modal-wp-link {
+      display: inline-flex; align-items: center; gap: 10px;
+      margin-top: 28px; padding: 14px 32px; border-radius: 50px;
+      background: rgba(242,196,206,.1); color: var(--pink);
+      text-decoration: none; font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 13px; letter-spacing: 1px;
+      text-transform: uppercase; border: 1px solid rgba(242,196,206,.15);
+      transition: background .3s, border-color .3s;
+    }
+    .modal-wp-link:hover { background: var(--accent); border-color: var(--accent); color: white; }
+
+    /* Dynamic post modal content styles */
+    .modal-body .wp-content { color: var(--pink-light); opacity: .82; line-height: 1.8; font-size: 15px; }
+    .modal-body .wp-content img { max-width: 100%; height: auto; border-radius: 10px; margin: 12px 0; display: block; }
+    .modal-body .wp-content a { color: var(--accent); }
+    .modal-body .wp-content ul, .modal-body .wp-content ol { padding-left: 20px; margin: 10px 0; }
+    .modal-body .wp-content li { line-height: 1.8; opacity: .78; }
+    .modal-body .wp-content h2, .modal-body .wp-content h3, .modal-body .wp-content h4 {
+      font-family: 'Syne', sans-serif; font-weight: 700; text-transform: uppercase;
+      margin: 24px 0 10px; color: var(--pink);
+    }
+    .modal-body .wp-content p { margin-bottom: 12px; }
+    .modal-body .wp-content iframe { max-width: 100%; border-radius: 10px; margin: 12px 0; }
+    .modal-body .wp-content .gallery, .modal-body .wp-content figure { margin: 12px 0; }
+
+    @media(max-width:600px) {
+      .modal-gallery { grid-template-columns: 1fr; }
+      .modal-gallery.triple { grid-template-columns: 1fr; }
+      .modal-close { top: 12px; right: 16px; width: 40px; height: 40px; font-size: 18px; }
+    }
+
     .marquee-top {
       background: var(--pink);
       color: var(--bg);
@@ -53,7 +358,6 @@
       vertical-align: middle; margin: 0 12px;
     }
 
-    /* ── Nav ── */
     nav {
       display: flex; justify-content: space-between; align-items: center;
       padding: 22px 48px; position: relative; z-index: 100;
@@ -88,7 +392,6 @@
     }
     .contact-btn:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(43,68,255,.45); }
 
-    /* ── Hero ── */
     .hero {
       display: grid; grid-template-columns: 1fr 1fr;
       min-height: 90vh; padding: 20px 48px 60px; gap: 36px;
@@ -107,9 +410,7 @@
       font-size: clamp(46px, 5.8vw, 86px); line-height: 0.95;
       color: var(--pink); text-transform: uppercase; letter-spacing: -2px;
     }
-    .hero-title .outline {
-      -webkit-text-stroke: 2px var(--pink); color: transparent;
-    }
+    .hero-title .outline { -webkit-text-stroke: 2px var(--pink); color: transparent; }
     .hero-title .highlight { color: var(--accent); -webkit-text-stroke: 0; }
 
     .hero-sub {
@@ -117,9 +418,7 @@
       color: var(--pink-light); max-width: 440px; opacity: .82;
     }
 
-    .hero-chips {
-      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px;
-    }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
     .chip {
       border: 1px solid rgba(242,196,206,.25); color: var(--pink-light);
       padding: 7px 16px; border-radius: 40px; font-size: 12px;
@@ -164,7 +463,6 @@
     .hero-card:nth-child(3) .card-icon { background: var(--blue-dark); color: var(--pink); }
     .hero-card:nth-child(4) .card-icon { background: white; color: var(--accent); }
 
-    /* ── Skills bar ── */
     .skills-bar {
       background: var(--pink); padding: 16px 0;
       overflow: hidden; white-space: nowrap;
@@ -177,7 +475,6 @@
     }
     .skills-inner .plus { color: var(--accent); font-size: 24px; margin: 0 10px; }
 
-    /* ── Section header ── */
     .section-label {
       font-size: 11px; font-weight: 700; letter-spacing: 5px;
       text-transform: uppercase; opacity: .5; margin-bottom: 10px;
@@ -196,13 +493,11 @@
       font-size: 72px; color: var(--accent); line-height: 1; opacity: .35;
     }
 
-    /* ── Projects ── */
     .projects { padding: 80px 48px; }
 
     .projects-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: auto;
       gap: 18px;
     }
 
@@ -210,16 +505,17 @@
       background: var(--blue-dark); border-radius: 16px;
       overflow: hidden; position: relative;
       cursor: pointer; transition: transform .4s;
+      text-decoration: none; color: inherit; display: block;
+      aspect-ratio: 4/3;
     }
     .project-item:hover { transform: translateY(-8px); }
-    .project-item:nth-child(1) { aspect-ratio: 4/3; }
-    .project-item:nth-child(2) { grid-row: span 2; aspect-ratio: auto; min-height: 340px; }
-    .project-item:nth-child(3) { aspect-ratio: 4/3; }
-    .project-item:nth-child(4) { aspect-ratio: 4/3; }
-    .project-item:nth-child(5) { aspect-ratio: 4/3; }
 
     .project-visual { width: 100%; height: 100%; position: relative; overflow: hidden; }
-    .project-canvas { width: 100%; height: 100%; display: block; }
+    .project-img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block; transition: transform .5s;
+    }
+    .project-item:hover .project-img { transform: scale(1.05); }
 
     .project-overlay {
       position: absolute; bottom: 0; left: 0; right: 0; padding: 22px;
@@ -237,7 +533,21 @@
       letter-spacing: 1px; text-transform: uppercase;
     }
 
-    /* ── About ── */
+    /* Loading indicator for dynamic posts */
+    .wp-posts-loading {
+      text-align: center; padding: 40px;
+      font-family: 'Syne', sans-serif; font-weight: 600;
+      font-size: 14px; letter-spacing: 2px; text-transform: uppercase;
+      opacity: .5;
+    }
+    .wp-posts-loading .spinner {
+      display: inline-block; width: 24px; height: 24px;
+      border: 3px solid rgba(242,196,206,.2); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin .8s linear infinite;
+      margin-bottom: 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     .about {
       padding: 80px 48px;
       display: grid; grid-template-columns: 1fr 1.3fr;
@@ -288,16 +598,13 @@
     }
     .tool:hover { transform:scale(1.05); background:var(--accent); color:white; }
 
-    /* ── Experience timeline ── */
     .experience { padding: 80px 48px; }
     .timeline { margin-top: 50px; position: relative; }
     .timeline::before {
       content:''; position:absolute; left:12px; top:0; bottom:0;
       width:2px; background:rgba(242,196,206,.15);
     }
-    .tl-item {
-      display: flex; gap: 36px; margin-bottom: 44px; position:relative;
-    }
+    .tl-item { display: flex; gap: 36px; margin-bottom: 44px; position:relative; }
     .tl-dot {
       flex-shrink:0; width:26px; height:26px;
       background:var(--accent); border-radius:50%; z-index:1;
@@ -316,7 +623,6 @@
     .tl-company { color:var(--accent); font-size:13px; font-weight:600; margin-bottom:10px; }
     .tl-desc { font-size:13px; line-height:1.7; opacity:.75; }
 
-    /* ── Services ── */
     .services { padding: 80px 48px; }
     .services-grid {
       display: grid; grid-template-columns: repeat(4,1fr);
@@ -346,7 +652,6 @@
     }
     .service-desc { font-size:12px; line-height:1.65; opacity:.7; }
 
-    /* ── Live Games ── */
     .live-games { padding: 80px 48px; }
     .games-grid {
       display: grid; grid-template-columns: repeat(2, 1fr);
@@ -371,8 +676,8 @@
       font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
       padding: 4px 12px; border-radius: 40px;
     }
-    .game-canvas {
-      width: 100%; height: 140px; display: block;
+    .game-thumb {
+      width: 100%; height: 160px; object-fit: cover; display: block;
     }
     .game-info {
       display: flex; align-items: center; gap: 14px;
@@ -424,26 +729,10 @@
       border-radius: 14px;
       display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
     }
-    .studio-label {
-      font-size: 10px; letter-spacing: 3px;
-      text-transform: uppercase; opacity: .4;
-    }
-    .studio-name {
-      font-family: 'Syne', sans-serif; font-weight: 800;
-      font-size: 18px; text-transform: uppercase; color: var(--accent);
-    }
-    .studio-roles {
-      font-size: 11px; opacity: .55; letter-spacing: 1px;
-      margin-left: auto;
-    }
+    .studio-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; opacity: .4; }
+    .studio-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; text-transform: uppercase; color: var(--accent); }
+    .studio-roles { font-size: 11px; opacity: .55; letter-spacing: 1px; margin-left: auto; }
 
-    @media(max-width:600px) {
-      .games-grid { grid-template-columns: 1fr; }
-      .games-studio-bar { flex-direction: column; align-items: flex-start; gap: 8px; }
-      .studio-roles { margin-left: 0; }
-    }
-
-    /* ── Contact ── */
     .contact { padding: 80px 48px 40px; text-align:center; position:relative; }
     .contact-big {
       font-family:'Syne',sans-serif; font-weight:800;
@@ -451,9 +740,7 @@
       letter-spacing:-3px; line-height:0.95; color:var(--pink);
     }
     .contact-big .outline-text { -webkit-text-stroke:2px var(--pink); color:transparent; }
-    .contact-email {
-      font-size:18px; opacity:.55; margin-top:20px; letter-spacing:1px;
-    }
+    .contact-email { font-size:18px; opacity:.55; margin-top:20px; letter-spacing:1px; }
     .contact-cta {
       margin-top:40px; display:inline-flex; align-items:center; gap:14px;
       background:var(--accent); color:white; padding:18px 44px;
@@ -466,7 +753,6 @@
     .contact-cta .arrow { display:inline-block; transition:transform .3s; }
     .contact-cta:hover .arrow { transform:translateX(6px); }
 
-    /* ── Footer ── */
     footer {
       padding: 28px 48px;
       display:flex; justify-content:space-between; align-items:center;
@@ -483,19 +769,16 @@
     }
     .social-links a:hover { background:var(--accent); border-color:var(--accent); }
 
-    /* ── Fade-in ── */
     .fade-in {
       opacity:0; transform:translateY(28px);
       transition:opacity .65s ease, transform .65s ease;
     }
     .fade-in.visible { opacity:1; transform:translateY(0); }
 
-    /* ── Responsive ── */
     @media(max-width:1000px){
       .hero { grid-template-columns:1fr; padding:40px 24px; min-height:auto; }
       .hero-right { grid-template-columns:1fr 1fr; }
       .projects-grid { grid-template-columns:1fr 1fr; }
-      .project-item:nth-child(2){ grid-row:auto; min-height:260px; }
       .about { grid-template-columns:1fr; padding:60px 24px; gap:40px; }
       .services-grid { grid-template-columns:1fr 1fr; }
       nav { padding:16px 24px; }
@@ -505,18 +788,64 @@
     @media(max-width:600px){
       .hero-right { grid-template-columns:1fr; }
       .projects-grid { grid-template-columns:1fr; }
-      .project-item:nth-child(2){ min-height:300px; }
       .services-grid { grid-template-columns:1fr; }
       .about-stats { grid-template-columns:repeat(3,1fr); gap:8px; }
       .stat-num { font-size:26px; }
       nav { padding:14px 18px; }
-      .projects, .about, .services, .contact, .experience { padding-left:18px; padding-right:18px; }
+      .projects, .about, .services, .contact, .experience, .live-games { padding-left:18px; padding-right:18px; }
+      .games-grid { grid-template-columns: 1fr; }
+      .games-studio-bar { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .studio-roles { margin-left: 0; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Marquee top -->
+  <!-- ADMIN BAR -->
+  <div class="admin-bar">
+    <span class="admin-label">✎ Edit Mode</span>
+    <span class="admin-status">Click any highlighted text to edit · Changes auto-save to your browser</span>
+    <button class="admin-btn-save" onclick="AdminPanel.save()">💾 Save</button>
+    <button class="admin-btn-reset" onclick="AdminPanel.resetAll()">↺ Reset</button>
+    <button class="admin-btn-exit" onclick="AdminPanel.exit()">✕ Exit</button>
+  </div>
+
+  <!-- ADMIN LOGIN -->
+  <div class="admin-login-overlay" id="admin-login">
+    <div class="admin-login-box">
+      <h3>🔐 Admin Access</h3>
+      <p>Enter your password to edit the site</p>
+      <input type="password" id="admin-password" placeholder="••••••••" autofocus>
+      <button class="login-btn" onclick="AdminPanel.authenticate()">Enter Edit Mode</button>
+      <div class="login-error" id="login-error">Wrong password. Try again.</div>
+      <br><br>
+      <button style="background:none;border:none;color:rgba(255,255,255,.3);font-size:11px;cursor:pointer;" onclick="document.getElementById('admin-login').classList.remove('active')">Cancel</button>
+    </div>
+  </div>
+
+  <!-- ADMIN SETTINGS MODAL -->
+  <div class="admin-settings-overlay" id="admin-settings">
+    <div class="admin-settings-box" id="admin-settings-box">
+      <!-- Dynamically filled -->
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="admin-toast" id="admin-toast"></div>
+
+  <!-- DYNAMIC MODAL (reused for all posts) -->
+  <div class="project-modal-overlay" id="dynamic-modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="project-modal">
+      <img class="modal-hero-img" id="dm-hero" src="" alt="">
+      <div class="modal-tags" id="dm-tags"></div>
+      <h2 class="modal-title" id="dm-title"></h2>
+      <div class="modal-subtitle" id="dm-subtitle"></div>
+      <div class="modal-body" id="dm-body"></div>
+      <a href="#" target="_blank" class="modal-wp-link" id="dm-wplink">Full Post on WordPress →</a>
+    </div>
+  </div>
+
   <div class="marquee-top">
     <div class="marquee-inner">
       <span>TECHNICAL ARTIST</span><span class="dot"></span>
@@ -538,11 +867,10 @@
     </div>
   </div>
 
-  <!-- Nav -->
   <nav>
     <div class="logo">
-      SAAD ZAFAR
-      <span class="logo-sub">Game Dev · Tech Artist</span>
+      <span data-editable="logo-name">SAAD ZAFAR</span>
+      <span class="logo-sub" data-editable="logo-sub">Game Dev · Tech Artist</span>
     </div>
     <ul class="nav-links">
       <li><a href="#work">Work</a></li>
@@ -554,265 +882,103 @@
     <button class="contact-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Let's Talk</button>
   </nav>
 
-  <!-- Hero -->
   <section class="hero">
     <div class="hero-left">
-      <div class="eyebrow">Available for work</div>
+      <div class="eyebrow" data-editable="hero-eyebrow">Available for work</div>
       <h1 class="hero-title">
         <span class="outline">Game</span><br>
         Developer<br>
         <span class="highlight">&</span> Technical<br>
         <span class="outline">Artist</span>
       </h1>
-      <p class="hero-sub">
+      <p class="hero-sub" data-editable="hero-sub">
         Saad Zafar — Technical Artist, Game Designer, 3D Artist &amp; Producer.
         I craft immersive games and real-time experiences from concept to ship,
         bridging art and engineering through shaders, procedural systems, and polished gameplay.
       </p>
       <div class="hero-chips">
         <span class="chip">Unity</span>
+        <span class="chip">Unreal</span>
+        <span class="chip">Blender</span>
         <span class="chip">Houdini</span>
-        <span class="chip">Substance</span>
         <span class="chip">ZBrush</span>
-        <span class="chip">HLSL</span>
-        <span class="chip">Maya</span>
+        <span class="chip">Substance</span>
+        <span class="chip">Shaders</span>
         <span class="chip">AR / VR</span>
       </div>
     </div>
-
     <div class="hero-right">
       <div class="hero-card">
-        <span class="card-label">Specialty</span>
-        <span class="card-title">Custom<br>Shaders</span>
+        <span class="card-label" data-editable="card1-label">Specialty</span>
+        <span class="card-title" data-editable="card1-title">Custom<br>Shaders</span>
         <div class="card-icon">◆</div>
       </div>
       <div class="hero-card">
-        <span class="card-label">Passion</span>
-        <span class="card-title">Procedural<br>Systems</span>
+        <span class="card-label" data-editable="card2-label">Passion</span>
+        <span class="card-title" data-editable="card2-title">Procedural<br>Systems</span>
         <div class="card-icon">⬡</div>
       </div>
       <div class="hero-card">
-        <span class="card-label">Craft</span>
-        <span class="card-title">3D Art &amp;<br>Materials</span>
+        <span class="card-label" data-editable="card3-label">Craft</span>
+        <span class="card-title" data-editable="card3-title">3D Art &amp;<br>Materials</span>
         <div class="card-icon">✦</div>
       </div>
       <div class="hero-card">
-        <span class="card-label">Studio</span>
-        <span class="card-title">MHFL<br>Studios</span>
+        <span class="card-label" data-editable="card4-label">Studio</span>
+        <span class="card-title" data-editable="card4-title">MHFL<br>Studios</span>
         <div class="card-icon">→</div>
       </div>
     </div>
   </section>
 
-  <!-- Skills bar -->
   <div class="skills-bar">
     <div class="skills-inner">
-      <span>MAYA</span><span class="plus">+</span>
+      <span>UNITY</span><span class="plus">+</span>
+      <span>UNREAL</span><span class="plus">+</span>
+      <span>BLENDER</span><span class="plus">+</span>
       <span>ZBRUSH</span><span class="plus">+</span>
+      <span>HOUDINI</span><span class="plus">+</span>
       <span>SUBSTANCE PAINTER</span><span class="plus">+</span>
       <span>SUBSTANCE DESIGNER</span><span class="plus">+</span>
+      <span>PHOTOSHOP</span><span class="plus">+</span>
+      <span>SHADER GRAPH</span><span class="plus">+</span>
+      <span>C#</span><span class="plus">+</span>
+      <span>JAVASCRIPT</span><span class="plus">+</span>
       <span>UNITY</span><span class="plus">+</span>
-      <span>HOUDINI</span><span class="plus">+</span>
-      <span>HLSL</span><span class="plus">+</span>
+      <span>UNREAL</span><span class="plus">+</span>
       <span>BLENDER</span><span class="plus">+</span>
-      <span>SPARK AR</span><span class="plus">+</span>
-      <span>LENS STUDIO</span><span class="plus">+</span>
-      <span>MAYA</span><span class="plus">+</span>
       <span>ZBRUSH</span><span class="plus">+</span>
+      <span>HOUDINI</span><span class="plus">+</span>
       <span>SUBSTANCE PAINTER</span><span class="plus">+</span>
       <span>SUBSTANCE DESIGNER</span><span class="plus">+</span>
-      <span>UNITY</span><span class="plus">+</span>
-      <span>HOUDINI</span><span class="plus">+</span>
-      <span>HLSL</span><span class="plus">+</span>
-      <span>BLENDER</span><span class="plus">+</span>
-      <span>SPARK AR</span><span class="plus">+</span>
-      <span>LENS STUDIO</span><span class="plus">+</span>
+      <span>PHOTOSHOP</span><span class="plus">+</span>
+      <span>SHADER GRAPH</span><span class="plus">+</span>
+      <span>C#</span><span class="plus">+</span>
+      <span>JAVASCRIPT</span><span class="plus">+</span>
     </div>
   </div>
 
-  <!-- Projects -->
   <section class="projects" id="work">
     <div class="section-header">
       <div>
         <div class="section-label fade-in">Selected Work</div>
         <h2 class="section-title fade-in">Real<br>Projects</h2>
       </div>
-      <span class="section-count">10</span>
+      <span class="section-count" id="post-count">—</span>
     </div>
-
-    <div class="projects-grid">
-      <div class="project-item fade-in">
-        <div class="project-visual">
-          <canvas class="project-canvas" id="cv-drift"></canvas>
-        </div>
-        <div class="project-overlay">
-          <div class="project-name">Drift Racing Legends</div>
-          <div class="project-sub">MHFL Studios · Self-Published</div>
-          <div class="project-tags">
-            <span class="tag">Unity</span>
-            <span class="tag">Mobile</span>
-            <span class="tag">Optimization</span>
-            <span class="tag">Light Baking</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-item fade-in">
-        <div class="project-visual">
-          <canvas class="project-canvas" id="cv-vr"></canvas>
-        </div>
-        <div class="project-overlay">
-          <div class="project-name">VR Cyberpunk<br>Haptic Reality</div>
-          <div class="project-sub">Saxion University · Art Lead</div>
-          <div class="project-tags">
-            <span class="tag">Unity</span>
-            <span class="tag">VR</span>
-            <span class="tag">Haptic Suit</span>
-            <span class="tag">ZBrush</span>
-            <span class="tag">Substance</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-item fade-in">
-        <div class="project-visual">
-          <canvas class="project-canvas" id="cv-ar"></canvas>
-        </div>
-        <div class="project-overlay">
-          <div class="project-name">AR Effects</div>
-          <div class="project-sub">Beyond Agency Amsterdam</div>
-          <div class="project-tags">
-            <span class="tag">Spark AR</span>
-            <span class="tag">Lens Studio</span>
-            <span class="tag">Instagram</span>
-            <span class="tag">Snapchat</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-item fade-in">
-        <div class="project-visual">
-          <canvas class="project-canvas" id="cv-terrain"></canvas>
-        </div>
-        <div class="project-overlay">
-          <div class="project-name">Terrain Generation</div>
-          <div class="project-sub">Procedural Pipeline · Ludoscope</div>
-          <div class="project-tags">
-            <span class="tag">Unity</span>
-            <span class="tag">Houdini</span>
-            <span class="tag">Substance Designer</span>
-            <span class="tag">Procedural</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-item fade-in">
-        <div class="project-visual">
-          <canvas class="project-canvas" id="cv-aqua"></canvas>
-        </div>
-        <div class="project-overlay">
-          <div class="project-name">Aquatic Life</div>
-          <div class="project-sub">Heim Museum Netherlands</div>
-          <div class="project-tags">
-            <span class="tag">Unity</span>
-            <span class="tag">Maya</span>
-            <span class="tag">Substance</span>
-            <span class="tag">Rigging</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="projects-grid" style="margin-top:18px;">
-      <div class="project-item fade-in">
-        <div class="project-visual">
-          <canvas class="project-canvas" id="cv-portrait"></canvas>
-        </div>
-        <div class="project-overlay">
-          <div class="project-name">Female 3D Portrait</div>
-          <div class="project-sub">Blender + Substance Painter</div>
-          <div class="project-tags">
-            <span class="tag">Blender</span>
-            <span class="tag">Substance</span>
-            <span class="tag">SSS</span>
-            <span class="tag">Shader Graph</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-item fade-in">
-        <div class="project-visual">
-          <canvas class="project-canvas" id="cv-herder"></canvas>
-        </div>
-        <div class="project-overlay">
-          <div class="project-name">Central Asian<br>Herder</div>
-          <div class="project-sub">ZBrush · Maya · Arnold · Substance</div>
-          <div class="project-tags">
-            <span class="tag">ZBrush</span>
-            <span class="tag">XGen Hair</span>
-            <span class="tag">Marvelous</span>
-            <span class="tag">Arnold</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-item fade-in">
-        <div class="project-visual">
-          <canvas class="project-canvas" id="cv-bmw"></canvas>
-        </div>
-        <div class="project-overlay">
-          <div class="project-name">BMW 635 CSI</div>
-          <div class="project-sub">Hard Surface Model &amp; Texture</div>
-          <div class="project-tags">
-            <span class="tag">Maya</span>
-            <span class="tag">3DS Max</span>
-            <span class="tag">Substance</span>
-            <span class="tag">Iray Render</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-item fade-in">
-        <div class="project-visual">
-          <canvas class="project-canvas" id="cv-shader"></canvas>
-        </div>
-        <div class="project-overlay">
-          <div class="project-name">Unity Rain Shader</div>
-          <div class="project-sub">HLSL Custom Shader — HDRP</div>
-          <div class="project-tags">
-            <span class="tag">HLSL</span>
-            <span class="tag">Unity HDRP</span>
-            <span class="tag">Flowmap</span>
-            <span class="tag">Tessellation</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-item fade-in">
-        <div class="project-visual">
-          <canvas class="project-canvas" id="cv-astro"></canvas>
-        </div>
-        <div class="project-overlay">
-          <div class="project-name">AstroTrash</div>
-          <div class="project-sub">Top-Down Shooter · Team Lead</div>
-          <div class="project-tags">
-            <span class="tag">Game Design</span>
-            <span class="tag">Maya</span>
-            <span class="tag">Environment Art</span>
-          </div>
-        </div>
+    <div id="wp-projects-container">
+      <div class="wp-posts-loading">
+        <div class="spinner"></div><br>
+        Loading projects from WordPress...
       </div>
     </div>
   </section>
 
-  <!-- About -->
   <section class="about" id="about">
     <div class="about-left fade-in">
       <div class="about-badge">
         <svg viewBox="0 0 160 160">
-          <defs>
-            <path id="circlePath" d="M 80,80 m -58,0 a 58,58 0 1,1 116,0 a 58,58 0 1,1 -116,0"/>
-          </defs>
+          <defs><path id="circlePath" d="M 80,80 m -58,0 a 58,58 0 1,1 116,0 a 58,58 0 1,1 -116,0"/></defs>
           <text fill="white" font-size="12.5" font-family="Syne,sans-serif" font-weight="700" letter-spacing="4">
             <textPath href="#circlePath">SAAD ZAFAR ✦ TECH ART ✦ GAME DEV ✦ </textPath>
           </text>
@@ -820,270 +986,103 @@
         <div class="badge-center">SZ<br><span style="font-size:13px;opacity:.7;">MHFL</span></div>
       </div>
       <div class="about-stats">
-        <div class="stat">
-          <div class="stat-num">8+</div>
-          <div class="stat-label">Years</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">10+</div>
-          <div class="stat-label">Projects</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">4</div>
-          <div class="stat-label">Apps Live</div>
-        </div>
+        <div class="stat"><div class="stat-num" data-editable="stat-years">7+</div><div class="stat-label">Years</div></div>
+        <div class="stat"><div class="stat-num" id="stat-projects">—</div><div class="stat-label">Projects</div></div>
+        <div class="stat"><div class="stat-num" data-editable="stat-apps">4</div><div class="stat-label">Apps Live</div></div>
       </div>
     </div>
     <div class="about-right fade-in">
-      <h2>Art &amp; Tech.<br>Bridged<br>Together.</h2>
-      <p>
+      <h2 data-editable="about-heading">Art &amp; Tech.<br>Bridged<br>Together.</h2>
+      <p data-editable="about-p1">
         I'm Saad — a game developer, technical artist, 3D artist, designer, and producer.
         I've shipped mobile games under my own studio <strong>MHFL Studios</strong>, worked as a junior
         AR developer at <strong>Beyond Agency (Amsterdam)</strong>, and led art on VR haptic suit projects at Saxion University.
       </p>
-      <p>
+      <p data-editable="about-p2">
         I thrive where art meets engineering — whether that's writing custom HLSL shaders,
         generating procedural terrain pipelines in Houdini, sculpting high-poly characters in ZBrush,
         or optimising 4M-poly environments to run on low-end mobile. I'm a problem solver first.
       </p>
       <div class="tools-list">
-        <span class="tool">Maya</span>
-        <span class="tool">ZBrush</span>
-        <span class="tool">Blender</span>
-        <span class="tool">Unity</span>
-        <span class="tool">Houdini</span>
-        <span class="tool">Substance Painter</span>
-        <span class="tool">Substance Designer</span>
-        <span class="tool">HLSL / Shader Graph</span>
-        <span class="tool">Spark AR</span>
-        <span class="tool">Lens Studio</span>
-        <span class="tool">Marvelous Designer</span>
-        <span class="tool">XGen</span>
-        <span class="tool">xNormal</span>
+        <span class="tool">Unity</span><span class="tool">Unreal</span><span class="tool">Blender</span>
+        <span class="tool">ZBrush</span><span class="tool">Houdini</span><span class="tool">Substance Painter</span>
+        <span class="tool">Substance Designer</span><span class="tool">Photoshop</span>
+        <span class="tool">HLSL / Shader Graph</span><span class="tool">C#</span><span class="tool">JavaScript</span>
+        <span class="tool">Spark AR</span><span class="tool">Lens Studio</span>
       </div>
     </div>
   </section>
 
-  <!-- Experience -->
   <section class="experience" id="xp">
-    <div class="section-label fade-in">Career</div>
-    <h2 class="section-title fade-in">Experience</h2>
-    <div class="timeline">
-
-      <div class="tl-item fade-in">
-        <div class="tl-dot">★</div>
-        <div class="tl-content">
-          <div class="tl-date">2022 — Present</div>
-          <div class="tl-title">Founder & Lead Developer</div>
-          <div class="tl-company">MHFL Studios (Self-Published)</div>
-          <div class="tl-desc">
-            Founded indie studio. Shipped 4 mobile games on Google Play including Drift Racing Legends,
-            Fruit Slice Merge, Mega Fruit Blast, and Shape Blast Number Game. Responsible for all art,
-            technical art, optimization, marketing, game design, and scripting.
-          </div>
-        </div>
+    <div class="section-header">
+      <div>
+        <div class="section-label fade-in">Career</div>
+        <h2 class="section-title fade-in">Experience</h2>
       </div>
-
-      <div class="tl-item fade-in">
-        <div class="tl-dot">★</div>
-        <div class="tl-content">
-          <div class="tl-date">2021</div>
-          <div class="tl-title">Junior AR Developer</div>
-          <div class="tl-company">Beyond (formerly Capitola.Social) — Amsterdam</div>
-          <div class="tl-desc">
-            Created AR effects for Instagram and Snapchat for major brands including Louis Vuitton, McDonald's,
-            Vogue (first AR cover), and Make-a-Wish Nederland. Used Spark AR and Lens Studio with custom shader
-            graphs and JavaScript-based logic systems.
-          </div>
-        </div>
+      <span class="section-count" id="xp-count">07</span>
+    </div>
+    <div class="admin-section-controls">
+      <button onclick="AdminPanel.addExperience()">+ Add Experience</button>
+    </div>
+    <div class="timeline" id="timeline-container">
+      <!-- Timeline items rendered by JS -->
+    </div>
+    <div class="tl-education fade-in" style="margin-top:36px;padding:22px 26px;background:rgba(242,196,206,.07);border:1px solid rgba(242,196,206,.1);border-radius:14px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div style="font-size:28px;">🎓</div>
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:16px;text-transform:uppercase;color:var(--pink);" data-editable="edu-title">BSc Creative Media & Game Technologies — Saxion University of Applied Sciences</div>
+        <div style="font-size:12px;opacity:.55;margin-top:4px;letter-spacing:2px;text-transform:uppercase;" data-editable="edu-location">Enschede, Netherlands</div>
       </div>
-
-      <div class="tl-item fade-in">
-        <div class="tl-dot">★</div>
-        <div class="tl-content">
-          <div class="tl-date">2019 — 2020</div>
-          <div class="tl-title">Art Lead & Technical Artist</div>
-          <div class="tl-company">Saxion University — VR Haptics Project</div>
-          <div class="tl-desc">
-            Led art direction on a VR cyberpunk demo using a prototype haptics suit. Designed the main enemy,
-            gun, grenade, and all environment materials. Handled post-processing, occlusion culling optimisation,
-            and level design. Stepped up as de-facto project manager to ship the final build.
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item fade-in">
-        <div class="tl-dot">★</div>
-        <div class="tl-content">
-          <div class="tl-date">2018</div>
-          <div class="tl-title">Internship — General 3D Artist</div>
-          <div class="tl-company">WizFit / VR Mobile Project</div>
-          <div class="tl-desc">
-            Environmental assets, obstacles, props, lighting, skybox and effects for an Xbox Kinect
-            endless runner. Ported and optimised an existing Unity game from 2008 for Samsung Gear VR,
-            including optimising 3 out of 25 levels for mobile VR performance.
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item fade-in">
-        <div class="tl-dot">★</div>
-        <div class="tl-content">
-          <div class="tl-date">2017</div>
-          <div class="tl-title">Game Art & Design</div>
-          <div class="tl-company">Heim Museum Project — Netherlands</div>
-          <div class="tl-desc">
-            Created all 3D sea-life models (whale, shark, dolphin, eel, jellyfish) with full Maya rig,
-            Unity flipbook eye animation, Substance Painter PBR textures. Game teaches children about sonar
-            and is on display at the Heim Museum, Hengelo.
-          </div>
-        </div>
-      </div>
-
     </div>
   </section>
 
-  <!-- Services -->
   <section class="services" id="services">
     <div class="section-label fade-in">What I Do</div>
     <h2 class="section-title fade-in">Services</h2>
-    <div class="services-grid">
-      <div class="service-card fade-in">
-        <span class="service-num">01</span>
-        <div class="service-icon">🎮</div>
-        <div class="service-title">Game Development</div>
-        <div class="service-desc">End-to-end production using Unity — gameplay systems, mechanics, mobile optimisation, and shipped titles.</div>
-      </div>
-      <div class="service-card fade-in">
-        <span class="service-num">02</span>
-        <div class="service-icon">✦</div>
-        <div class="service-title">Technical Art</div>
-        <div class="service-desc">Custom HLSL shaders, material pipelines, shader graphs, tessellation, displacement and flow effects.</div>
-      </div>
-      <div class="service-card fade-in">
-        <span class="service-num">03</span>
-        <div class="service-icon">⚙</div>
-        <div class="service-title">3D Art & Characters</div>
-        <div class="service-desc">High-poly sculpts, retopology, rigging, PBR texturing, hair systems and clothing simulation.</div>
-      </div>
-      <div class="service-card fade-in">
-        <span class="service-num">04</span>
-        <div class="service-icon">📱</div>
-        <div class="service-title">AR Effects</div>
-        <div class="service-desc">Instagram & Snapchat AR filters using Spark AR and Lens Studio for brands, agencies, and campaigns.</div>
-      </div>
+    <div class="admin-section-controls">
+      <button onclick="AdminPanel.addService()">+ Add Service</button>
+    </div>
+    <div class="services-grid" id="services-container">
+      <!-- Services rendered by JS -->
     </div>
   </section>
 
-  <!-- Live Games -->
   <section class="live-games" id="games">
     <div class="section-header">
       <div>
         <div class="section-label fade-in">Shipped Titles</div>
         <h2 class="section-title fade-in">Live on<br>Google Play</h2>
       </div>
-      <span class="section-count">04</span>
+      <span class="section-count" id="games-count">04</span>
     </div>
-    <div class="games-grid">
-
-      <a href="https://play.google.com/store/apps/details?id=com.MHFLStudios.DriftLegends" target="_blank" class="game-card fade-in" style="--accent-color:#FF6B35;">
-        <div class="game-badge">FLAGSHIP</div>
-        <canvas class="game-canvas" id="gc-drift"></canvas>
-        <div class="game-info">
-          <div class="game-icon">🏎️</div>
-          <div class="game-details">
-            <div class="game-name">Drift Racing Legends</div>
-            <div class="game-genre">Racing · Open World · Mobile</div>
-          </div>
-        </div>
-        <p class="game-desc">High-action drifting meets relaxing exploration. Real-world locations, world-class cars. Optimized a 4M-vertex environment to run on low-end mobile using light baking, texture atlases &amp; occlusion culling.</p>
-        <div class="game-footer">
-          <span class="game-tag">Unity</span>
-          <span class="game-tag">Light Baking</span>
-          <span class="game-tag">Optimization</span>
-          <span class="game-store-link">Google Play <span class="arrow">→</span></span>
-        </div>
-      </a>
-
-      <a href="https://play.google.com/store/apps/details?id=com.MHFLStudios.FruitSlice" target="_blank" class="game-card fade-in" style="--accent-color:#FF4D6D;">
-        <canvas class="game-canvas" id="gc-fruit"></canvas>
-        <div class="game-info">
-          <div class="game-icon">🍉</div>
-          <div class="game-details">
-            <div class="game-name">Fruit Slice: Merge Puzzle</div>
-            <div class="game-genre">Puzzle · Casual · All Ages</div>
-          </div>
-        </div>
-        <p class="game-desc">Drop fruits and combine them into bigger fruits. A chill, fun puzzle game good for all ages.</p>
-        <div class="game-footer">
-          <span class="game-tag">Unity</span>
-          <span class="game-tag">2D Physics</span>
-          <span class="game-tag">UI/UX</span>
-          <span class="game-store-link">Google Play <span class="arrow">→</span></span>
-        </div>
-      </a>
-
-      <a href="https://play.google.com/store/apps/details?id=com.MHFLStudios.StickyFruits" target="_blank" class="game-card fade-in" style="--accent-color:#9B5DE5;">
-        <canvas class="game-canvas" id="gc-blast"></canvas>
-        <div class="game-info">
-          <div class="game-icon">💥</div>
-          <div class="game-details">
-            <div class="game-name">Mega Fruit Blast</div>
-            <div class="game-genre">Puzzle · Quick Play · Arcade</div>
-          </div>
-        </div>
-        <p class="game-desc">Simple and fast puzzle game — destroy connecting fruits. Powerups for extra time and score!</p>
-        <div class="game-footer">
-          <span class="game-tag">Unity</span>
-          <span class="game-tag">Match Logic</span>
-          <span class="game-tag">VFX</span>
-          <span class="game-store-link">Google Play <span class="arrow">→</span></span>
-        </div>
-      </a>
-
-      <a href="https://play.google.com/store/apps/details?id=com.MHFLStudios.NumberGame" target="_blank" class="game-card fade-in" style="--accent-color:#00BBF9;">
-        <canvas class="game-canvas" id="gc-shape"></canvas>
-        <div class="game-info">
-          <div class="game-icon">🔷</div>
-          <div class="game-details">
-            <div class="game-name">Shape Blast Number Game</div>
-            <div class="game-genre">Shooter · Puzzle · Progression</div>
-          </div>
-        </div>
-        <p class="game-desc">Shooting puzzle — destroy shapes with limited shots. Progressive difficulty with upgrades.</p>
-        <div class="game-footer">
-          <span class="game-tag">Unity</span>
-          <span class="game-tag">Ballistics</span>
-          <span class="game-tag">Level Design</span>
-          <span class="game-store-link">Google Play <span class="arrow">→</span></span>
-        </div>
-      </a>
-
+    <div class="admin-section-controls">
+      <button onclick="AdminPanel.addGame()">+ Add Game</button>
     </div>
-
+    <div class="games-grid" id="games-container">
+      <!-- Games rendered by JS -->
+    </div>
     <div class="games-studio-bar fade-in">
       <span class="studio-label">Published under</span>
-      <span class="studio-name">MHFL Studios</span>
-      <span class="studio-roles">Art · Tech Art · Game Design · Marketing · ASO · Scripting · Optimization</span>
+      <span class="studio-name" data-editable="studio-name">MHFL Studios</span>
+      <span class="studio-roles" data-editable="studio-roles">Art · Tech Art · Game Design · Marketing · ASO · Scripting · Optimization</span>
     </div>
   </section>
 
-  <!-- Contact -->
   <section class="contact fade-in" id="contact">
     <div class="contact-big">
-      Let's Build<br>
-      <span class="outline-text">Something</span><br>
-      Real
+      <span data-editable="contact-line1">Let's Build</span><br>
+      <span class="outline-text" data-editable="contact-line2">Something</span><br>
+      <span data-editable="contact-line3">Real</span>
     </div>
-    <p class="contact-email">msaadz96@gmail.com</p>
+    <p class="contact-email" data-editable="contact-email">msaadz96@gmail.com</p>
     <br>
-    <a href="mailto:msaadz96@gmail.com" class="contact-cta">
+    <a href="mailto:msaadz96@gmail.com" class="contact-cta" id="contact-cta-link">
       Get In Touch <span class="arrow">→</span>
     </a>
   </section>
 
   <footer>
-    <span>© 2026 Saad Zafar — Game Dev & Technical Artist</span>
+    <span data-editable="footer-text">© 2026 Saad Zafar — Game Dev & Technical Artist</span>
     <div class="social-links">
       <a href="https://www.linkedin.com/in/saad-zafar-252a76a3/" target="_blank">in</a>
       <a href="https://gamerpunker.wordpress.com" target="_blank">W</a>
@@ -1092,489 +1091,642 @@
   </footer>
 
   <script>
+    // =============================================
+    // ADMIN PANEL SYSTEM
+    // =============================================
+    const AdminPanel = {
+      STORAGE_KEY: 'sz_portfolio_data',
+      PASSWORD_HASH: 'sz2026admin', // Change this to your desired password
+      isActive: false,
+
+      // Default data for all dynamic sections
+      defaults: {
+        experience: [
+          { date: 'Feb 2025 — Present', title: 'Junior Lecturer', company: 'Air University, Islamabad', icon: '▸',
+            desc: 'Creating courses and teaching Graphic Art & Illustration (lab) and 3D Animation & VFX (lectures + lab). Performing admin duties and researching 3D animation, VFX, 3D modeling, Adobe Illustrator & Photoshop techniques and workflows. Teaching 120 students from beginner to intermediate level.' },
+          { date: 'May 2023 — Present', title: 'Founder', company: 'M.H.F.L Studios, Islamabad', icon: '★',
+            desc: 'Managing resources, project planning, technical/artistic/design support and guidance. Market research, brand creation, entrepreneurship, and cost-benefit analysis. Shipped 4 mobile games on Google Play Store.' },
+          { date: 'Feb 2022 — Jun 2023', title: 'Game Designer', company: 'The Knights / Terafort, Islamabad', icon: '◆',
+            desc: 'Planning, creating design documents, implementation and validation of features. Supporting developers and artists in tasks. Testing and improvement of game assets and features.' },
+          { date: 'Sep 2021 — Jan 2022', title: '3D Artist', company: 'SpunkStudios, Islamabad', icon: '◆',
+            desc: 'Worked as a 3D artist on mobile games — creation of assets, optimization, and testing. Created assets including a 3D character and 3 different modular environments.' },
+          { date: 'Oct 2020 — May 2021', title: 'Junior AR Developer', company: 'Capitola, Amsterdam', icon: '★',
+            desc: 'Created Instagram and Snapchat AR filters for major brands including Vogue, Louis Vuitton, McDonald\'s, and Make-a-Wish using Spark AR and Lens Studio. Learned JavaScript from scratch, async programming, and mastered both AR platforms.' },
+          { date: 'Sep 2019 — Feb 2020', title: 'Developer', company: 'VirtualPlay, Utrecht', icon: '◆',
+            desc: 'Worked in Unity on a terrain generation system using Ludoscope, a grammar-based tool that generates procedural tiles converted into terrain meshes. Built a full workflow producing textured, fully realized terrain chunks.' },
+          { date: 'Sep 2017 — Feb 2018', title: '3D Artist', company: 'VirtuaGym, Amsterdam', icon: '◆',
+            desc: 'Asset creation, optimization, and mobile VR conversion. Worked with motion capture using IPIsoft. Found and implemented optimization techniques for a 12-year-old Unity game and built a procedural level for an endless runner game.' },
+        ],
+        services: [
+          { icon: '🎮', title: 'Game Development', desc: 'End-to-end production using Unity — gameplay systems, mechanics, mobile optimisation, and shipped titles.' },
+          { icon: '✦', title: 'Technical Art', desc: 'Custom HLSL shaders, material pipelines, shader graphs, tessellation, displacement and flow effects.' },
+          { icon: '⚙', title: '3D Art & Characters', desc: 'High-poly sculpts, retopology, rigging, PBR texturing, hair systems and clothing simulation.' },
+          { icon: '📱', title: 'AR Effects', desc: 'Instagram & Snapchat AR filters using Spark AR and Lens Studio for brands, agencies, and campaigns.' },
+        ],
+        games: [
+          { name: 'Drift Racing Legends', genre: 'Racing · Open World · Mobile', desc: 'High-action drifting meets relaxing exploration. Real-world locations, world-class cars. Optimized a 4M-vertex environment to run on low-end mobile.',
+            icon: '🏎️', thumb: 'https://gamerpunker.wordpress.com/wp-content/uploads/2024/07/featureimagemhflstudios.png',
+            link: 'https://play.google.com/store/apps/details?id=com.MHFLStudios.DriftLegends', color: '#FF6B35',
+            tags: ['Unity','Light Baking','Optimization'], badge: 'FLAGSHIP' },
+          { name: 'Fruit Slice: Merge Puzzle', genre: 'Puzzle · Casual · All Ages', desc: 'Drop fruits and combine them into bigger fruits. A chill, fun puzzle game good for all ages.',
+            icon: '🍉', thumb: 'https://gamerpunker.wordpress.com/wp-content/uploads/2024/07/screenshot1-2.jpg',
+            link: 'https://play.google.com/store/apps/details?id=com.MHFLStudios.FruitSlice', color: '#FF4D6D',
+            tags: ['Unity','2D Physics','UI/UX'], badge: '' },
+          { name: 'Mega Fruit Blast', genre: 'Puzzle · Quick Play · Arcade', desc: 'Simple and fast puzzle game — destroy connecting fruits. Powerups for extra time and score!',
+            icon: '💥', thumb: 'https://gamerpunker.wordpress.com/wp-content/uploads/2024/07/image.png',
+            link: 'https://play.google.com/store/apps/details?id=com.MHFLStudios.StickyFruits', color: '#9B5DE5',
+            tags: ['Unity','Match Logic','VFX'], badge: '' },
+          { name: 'Shape Blast Number Game', genre: 'Shooter · Puzzle · Progression', desc: 'Shooting puzzle — destroy shapes with limited shots. Progressive difficulty with upgrades.',
+            icon: '🔷', thumb: 'https://gamerpunker.wordpress.com/wp-content/uploads/2024/07/ss_1.png',
+            link: 'https://play.google.com/store/apps/details?id=com.MHFLStudios.NumberGame', color: '#00BBF9',
+            tags: ['Unity','Ballistics','Level Design'], badge: '' },
+        ]
+      },
+
+      // Load saved data or defaults
+      getData() {
+        try {
+          const saved = localStorage.getItem(this.STORAGE_KEY);
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            // Merge with defaults to ensure new fields exist
+            return { ...this.defaults, ...parsed };
+          }
+        } catch(e) { console.warn('Error loading saved data', e); }
+        return JSON.parse(JSON.stringify(this.defaults));
+      },
+
+      // Save data
+      saveData(data) {
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+      },
+
+      // Show login prompt
+      showLogin() {
+        document.getElementById('admin-login').classList.add('active');
+        setTimeout(() => document.getElementById('admin-password').focus(), 100);
+      },
+
+      // Authenticate
+      authenticate() {
+        const pw = document.getElementById('admin-password').value;
+        if (pw === this.PASSWORD_HASH) {
+          document.getElementById('admin-login').classList.remove('active');
+          document.getElementById('admin-password').value = '';
+          document.getElementById('login-error').style.display = 'none';
+          this.enter();
+        } else {
+          document.getElementById('login-error').style.display = 'block';
+          document.getElementById('admin-password').value = '';
+          document.getElementById('admin-password').focus();
+        }
+      },
+
+      // Enter admin mode
+      enter() {
+        this.isActive = true;
+        document.body.classList.add('admin-mode');
+
+        // Make all data-editable elements contenteditable
+        document.querySelectorAll('[data-editable]').forEach(el => {
+          el.contentEditable = 'true';
+          el.spellcheck = false;
+        });
+
+        this.toast('Edit mode activated — click any text to edit');
+      },
+
+      // Exit admin mode
+      exit() {
+        this.isActive = false;
+        document.body.classList.remove('admin-mode');
+        document.querySelectorAll('[data-editable]').forEach(el => {
+          el.contentEditable = 'false';
+        });
+        this.toast('Edit mode deactivated');
+      },
+
+      // Save all changes
+      save() {
+        // Save inline editable text
+        const savedText = {};
+        document.querySelectorAll('[data-editable]').forEach(el => {
+          savedText[el.dataset.editable] = el.innerHTML;
+        });
+        localStorage.setItem(this.STORAGE_KEY + '_text', JSON.stringify(savedText));
+
+        // Save structured data
+        const data = this.getData();
+        this.saveData(data);
+
+        // Update mailto link
+        const emailEl = document.querySelector('[data-editable="contact-email"]');
+        if (emailEl) {
+          const email = emailEl.textContent.trim();
+          const ctaLink = document.getElementById('contact-cta-link');
+          if (ctaLink) ctaLink.href = 'mailto:' + email;
+        }
+
+        this.toast('All changes saved ✓');
+      },
+
+      // Restore inline text
+      restoreText() {
+        try {
+          const saved = localStorage.getItem(this.STORAGE_KEY + '_text');
+          if (saved) {
+            const data = JSON.parse(saved);
+            Object.entries(data).forEach(([key, val]) => {
+              const el = document.querySelector(`[data-editable="${key}"]`);
+              if (el) el.innerHTML = val;
+            });
+          }
+        } catch(e) { console.warn('Error restoring text', e); }
+      },
+
+      // Reset everything
+      resetAll() {
+        if (!confirm('Reset ALL edits to defaults? This cannot be undone.')) return;
+        localStorage.removeItem(this.STORAGE_KEY);
+        localStorage.removeItem(this.STORAGE_KEY + '_text');
+        this.toast('All data reset — reloading...');
+        setTimeout(() => location.reload(), 800);
+      },
+
+      // Toast
+      toast(msg) {
+        const t = document.getElementById('admin-toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+      },
+
+      // ===== EXPERIENCE =====
+      renderExperience() {
+        const data = this.getData();
+        const container = document.getElementById('timeline-container');
+        document.getElementById('xp-count').textContent = data.experience.length < 10 ? '0' + data.experience.length : data.experience.length;
+
+        container.innerHTML = data.experience.map((xp, i) => `
+          <div class="tl-item fade-in visible">
+            <div class="tl-dot">${xp.icon}</div>
+            <div class="tl-content">
+              <div class="tl-date" data-editable="xp-date-${i}">${xp.date}</div>
+              <div class="tl-title" data-editable="xp-title-${i}">${xp.title}</div>
+              <div class="tl-company" data-editable="xp-company-${i}">${xp.company}</div>
+              <div class="tl-desc" data-editable="xp-desc-${i}">${xp.desc}</div>
+              <div class="admin-item-controls">
+                <button class="btn-move" onclick="AdminPanel.moveExperience(${i},-1)">↑ Up</button>
+                <button class="btn-move" onclick="AdminPanel.moveExperience(${i},1)">↓ Down</button>
+                <button class="btn-del" onclick="AdminPanel.deleteExperience(${i})">✕ Delete</button>
+                <button class="btn-move" onclick="AdminPanel.editExperienceIcon(${i})">✎ Icon</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        if (this.isActive) {
+          container.querySelectorAll('[data-editable]').forEach(el => {
+            el.contentEditable = 'true';
+            el.spellcheck = false;
+          });
+        }
+      },
+
+      saveExperienceFromDOM() {
+        const data = this.getData();
+        data.experience.forEach((xp, i) => {
+          const date = document.querySelector(`[data-editable="xp-date-${i}"]`);
+          const title = document.querySelector(`[data-editable="xp-title-${i}"]`);
+          const company = document.querySelector(`[data-editable="xp-company-${i}"]`);
+          const desc = document.querySelector(`[data-editable="xp-desc-${i}"]`);
+          if (date) xp.date = date.textContent;
+          if (title) xp.title = title.textContent;
+          if (company) xp.company = company.textContent;
+          if (desc) xp.desc = desc.textContent;
+        });
+        this.saveData(data);
+      },
+
+      addExperience() {
+        this.saveExperienceFromDOM();
+        const data = this.getData();
+        data.experience.unshift({
+          date: 'Month Year — Present',
+          title: 'New Role Title',
+          company: 'Company Name, City',
+          icon: '◆',
+          desc: 'Describe your responsibilities and achievements here.'
+        });
+        this.saveData(data);
+        this.renderExperience();
+        this.toast('New experience added at top');
+      },
+
+      deleteExperience(i) {
+        if (!confirm('Delete this experience entry?')) return;
+        this.saveExperienceFromDOM();
+        const data = this.getData();
+        data.experience.splice(i, 1);
+        this.saveData(data);
+        this.renderExperience();
+        this.toast('Experience deleted');
+      },
+
+      moveExperience(i, dir) {
+        this.saveExperienceFromDOM();
+        const data = this.getData();
+        const ni = i + dir;
+        if (ni < 0 || ni >= data.experience.length) return;
+        [data.experience[i], data.experience[ni]] = [data.experience[ni], data.experience[i]];
+        this.saveData(data);
+        this.renderExperience();
+      },
+
+      editExperienceIcon(i) {
+        const icon = prompt('Enter new icon character (e.g. ▸ ★ ◆ ● ■ ▶):', this.getData().experience[i].icon);
+        if (icon === null) return;
+        this.saveExperienceFromDOM();
+        const data = this.getData();
+        data.experience[i].icon = icon;
+        this.saveData(data);
+        this.renderExperience();
+      },
+
+      // ===== SERVICES =====
+      renderServices() {
+        const data = this.getData();
+        const container = document.getElementById('services-container');
+
+        container.innerHTML = data.services.map((svc, i) => `
+          <div class="service-card fade-in visible">
+            <span class="service-num">${String(i+1).padStart(2,'0')}</span>
+            <div class="service-icon">${svc.icon}</div>
+            <div class="service-title" data-editable="svc-title-${i}">${svc.title}</div>
+            <div class="service-desc" data-editable="svc-desc-${i}">${svc.desc}</div>
+            <div class="admin-item-controls">
+              <button class="btn-move" onclick="AdminPanel.editServiceIcon(${i})">✎ Icon</button>
+              <button class="btn-del" onclick="AdminPanel.deleteService(${i})">✕ Delete</button>
+            </div>
+          </div>
+        `).join('');
+
+        if (this.isActive) {
+          container.querySelectorAll('[data-editable]').forEach(el => {
+            el.contentEditable = 'true';
+            el.spellcheck = false;
+          });
+        }
+      },
+
+      saveServicesFromDOM() {
+        const data = this.getData();
+        data.services.forEach((svc, i) => {
+          const title = document.querySelector(`[data-editable="svc-title-${i}"]`);
+          const desc = document.querySelector(`[data-editable="svc-desc-${i}"]`);
+          if (title) svc.title = title.textContent;
+          if (desc) svc.desc = desc.textContent;
+        });
+        this.saveData(data);
+      },
+
+      addService() {
+        this.saveServicesFromDOM();
+        const data = this.getData();
+        data.services.push({ icon: '🔧', title: 'New Service', desc: 'Describe this service here.' });
+        this.saveData(data);
+        this.renderServices();
+        this.toast('New service added');
+      },
+
+      deleteService(i) {
+        if (!confirm('Delete this service?')) return;
+        this.saveServicesFromDOM();
+        const data = this.getData();
+        data.services.splice(i, 1);
+        this.saveData(data);
+        this.renderServices();
+        this.toast('Service deleted');
+      },
+
+      editServiceIcon(i) {
+        const icon = prompt('Enter new icon/emoji:', this.getData().services[i].icon);
+        if (icon === null) return;
+        this.saveServicesFromDOM();
+        const data = this.getData();
+        data.services[i].icon = icon;
+        this.saveData(data);
+        this.renderServices();
+      },
+
+      // ===== GAMES =====
+      renderGames() {
+        const data = this.getData();
+        const container = document.getElementById('games-container');
+        document.getElementById('games-count').textContent = data.games.length < 10 ? '0' + data.games.length : data.games.length;
+
+        container.innerHTML = data.games.map((g, i) => `
+          <a href="${g.link}" target="_blank" class="game-card fade-in visible" style="--accent-color:${g.color};">
+            ${g.badge ? `<div class="game-badge">${g.badge}</div>` : ''}
+            <img class="game-thumb" src="${g.thumb}" alt="${g.name}" onerror="this.style.display='none'">
+            <div class="game-info">
+              <div class="game-icon">${g.icon}</div>
+              <div>
+                <div class="game-name" data-editable="game-name-${i}">${g.name}</div>
+                <div class="game-genre" data-editable="game-genre-${i}">${g.genre}</div>
+              </div>
+            </div>
+            <p class="game-desc" data-editable="game-desc-${i}">${g.desc}</p>
+            <div class="game-footer">
+              ${g.tags.map(t => `<span class="game-tag">${t}</span>`).join('')}
+              <span class="game-store-link">Google Play <span class="arrow">→</span></span>
+            </div>
+            <div class="admin-item-controls" style="padding:0 22px 16px;">
+              <button class="btn-move" onclick="event.preventDefault();AdminPanel.editGame(${i})">✎ Edit Details</button>
+              <button class="btn-del" onclick="event.preventDefault();AdminPanel.deleteGame(${i})">✕ Delete</button>
+            </div>
+          </a>
+        `).join('');
+
+        if (this.isActive) {
+          container.querySelectorAll('[data-editable]').forEach(el => {
+            el.contentEditable = 'true';
+            el.spellcheck = false;
+          });
+        }
+      },
+
+      addGame() {
+        const data = this.getData();
+        this.openGameSettings({
+          name: 'New Game', genre: 'Genre · Platform', desc: 'Game description here.',
+          icon: '🎮', thumb: '', link: '#', color: '#FF6B35',
+          tags: ['Unity'], badge: ''
+        }, (game) => {
+          data.games.push(game);
+          this.saveData(data);
+          this.renderGames();
+          this.toast('New game added');
+        });
+      },
+
+      editGame(i) {
+        const data = this.getData();
+        this.openGameSettings(data.games[i], (game) => {
+          data.games[i] = game;
+          this.saveData(data);
+          this.renderGames();
+          this.toast('Game updated');
+        });
+      },
+
+      deleteGame(i) {
+        if (!confirm('Delete this game?')) return;
+        const data = this.getData();
+        data.games.splice(i, 1);
+        this.saveData(data);
+        this.renderGames();
+        this.toast('Game deleted');
+      },
+
+      openGameSettings(game, callback) {
+        const overlay = document.getElementById('admin-settings');
+        const box = document.getElementById('admin-settings-box');
+        box.innerHTML = `
+          <h3>Game Details</h3>
+          <label>Name</label>
+          <input id="gs-name" value="${game.name}">
+          <label>Genre</label>
+          <input id="gs-genre" value="${game.genre}">
+          <label>Description</label>
+          <textarea id="gs-desc">${game.desc}</textarea>
+          <label>Icon (emoji)</label>
+          <input id="gs-icon" value="${game.icon}">
+          <label>Thumbnail URL</label>
+          <input id="gs-thumb" value="${game.thumb}">
+          <label>Store Link</label>
+          <input id="gs-link" value="${game.link}">
+          <label>Accent Color</label>
+          <input id="gs-color" type="color" value="${game.color}">
+          <label>Tags (comma separated)</label>
+          <input id="gs-tags" value="${game.tags.join(', ')}">
+          <label>Badge (e.g. FLAGSHIP, NEW — leave blank for none)</label>
+          <input id="gs-badge" value="${game.badge || ''}">
+          <div class="settings-actions">
+            <button class="settings-cancel" onclick="document.getElementById('admin-settings').classList.remove('active')">Cancel</button>
+            <button class="settings-save" id="gs-save">Save</button>
+          </div>
+        `;
+        overlay.classList.add('active');
+        document.getElementById('gs-save').onclick = () => {
+          callback({
+            name: document.getElementById('gs-name').value,
+            genre: document.getElementById('gs-genre').value,
+            desc: document.getElementById('gs-desc').value,
+            icon: document.getElementById('gs-icon').value,
+            thumb: document.getElementById('gs-thumb').value,
+            link: document.getElementById('gs-link').value,
+            color: document.getElementById('gs-color').value,
+            tags: document.getElementById('gs-tags').value.split(',').map(t => t.trim()).filter(Boolean),
+            badge: document.getElementById('gs-badge').value
+          });
+          overlay.classList.remove('active');
+        };
+      },
+
+      // Save all structured data from DOM before a full save
+      saveAllFromDOM() {
+        this.saveExperienceFromDOM();
+        this.saveServicesFromDOM();
+      },
+
+      // Override save to include DOM sync
+      _origSave: null,
+    };
+
+    // Wrap save to include DOM sync
+    const _origSave = AdminPanel.save.bind(AdminPanel);
+    AdminPanel.save = function() {
+      this.saveAllFromDOM();
+      _origSave();
+    };
+
+    // =============================================
+    // KEYBOARD SHORTCUT & URL PARAM
+    // =============================================
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'E') {
+        e.preventDefault();
+        if (AdminPanel.isActive) { AdminPanel.exit(); }
+        else { AdminPanel.showLogin(); }
+      }
+    });
+
+    // Enter on password field
+    document.getElementById('admin-password').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') AdminPanel.authenticate();
+    });
+
+    // URL param ?edit=true
+    if (new URLSearchParams(window.location.search).get('edit') === 'true') {
+      AdminPanel.showLogin();
+    }
+
+    // =============================================
+    // INIT DYNAMIC SECTIONS
+    // =============================================
+    AdminPanel.renderExperience();
+    AdminPanel.renderServices();
+    AdminPanel.renderGames();
+    AdminPanel.restoreText();
+
+    // =============================================
+    // WORDPRESS REST API AUTO-FETCH
+    // =============================================
+    const WP_SITE = 'gamerpunker.wordpress.com';
+    const API_URL = `https://public-api.wordpress.com/rest/v1.1/sites/${WP_SITE}/posts/?number=40&status=publish&order_by=date&order=DESC`;
+
+    function getCategoryTags(cats) {
+      if (!cats) return [];
+      return Object.keys(cats).map(k => cats[k].name);
+    }
+
+    function getPostImage(post) {
+      if (post.featured_image) return post.featured_image;
+      if (post.post_thumbnail && post.post_thumbnail.URL) return post.post_thumbnail.URL;
+      const match = post.content && post.content.match(/<img[^>]+src=["']([^"']+)["']/i);
+      return match ? match[1] : null;
+    }
+
+    function cleanContent(html) {
+      if (!html) return '';
+      let cleaned = html.replace(/\[\/?\w+[^\]]*\]/g, '');
+      cleaned = cleaned.replace(/style="[^"]*"/gi, '');
+      return cleaned;
+    }
+
+    function buildProjectCard(post) {
+      const img = getPostImage(post);
+      const tags = getCategoryTags(post.categories);
+      const date = new Date(post.date).getFullYear();
+      const excerpt = post.excerpt ? post.excerpt.replace(/<[^>]+>/g, '').trim().substring(0, 80) : '';
+
+      const card = document.createElement('div');
+      card.className = 'project-item fade-in';
+      card.onclick = () => openDynamicModal(post);
+
+      card.innerHTML = `
+        <div class="project-visual">
+          ${img ? `<img class="project-img" src="${img}" alt="${post.title}" loading="lazy">` :
+            `<div style="width:100%;height:100%;background:var(--blue-dark);display:flex;align-items:center;justify-content:center;font-family:Syne;font-size:24px;font-weight:800;text-transform:uppercase;color:var(--pink);opacity:.3;padding:20px;text-align:center;">${post.title}</div>`}
+        </div>
+        <div class="project-overlay">
+          <div class="project-name">${post.title}</div>
+          <div class="project-sub">${date}${excerpt ? ' · ' + excerpt : ''}</div>
+          <div class="project-tags">
+            ${tags.slice(0, 3).map(t => `<span class="tag">${t}</span>`).join('')}
+          </div>
+        </div>
+      `;
+      return card;
+    }
+
+    function openDynamicModal(post) {
+      const modal = document.getElementById('dynamic-modal');
+      const heroImg = document.getElementById('dm-hero');
+      const title = document.getElementById('dm-title');
+      const subtitle = document.getElementById('dm-subtitle');
+      const tagsEl = document.getElementById('dm-tags');
+      const body = document.getElementById('dm-body');
+      const wpLink = document.getElementById('dm-wplink');
+
+      const img = getPostImage(post);
+      const tags = getCategoryTags(post.categories);
+      const date = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      heroImg.src = img || '';
+      heroImg.alt = post.title;
+      heroImg.style.display = img ? 'block' : 'none';
+
+      title.textContent = post.title;
+      subtitle.textContent = date;
+
+      tagsEl.innerHTML = tags.map(t => `<span class="modal-tag">${t}</span>`).join('');
+
+      const content = cleanContent(post.content);
+      body.innerHTML = `<div class="wp-content">${content}</div>`;
+
+      wpLink.href = post.URL || post.short_URL || '#';
+
+      modal.classList.add('active');
+      document.body.classList.add('modal-open');
+      modal.scrollTop = 0;
+    }
+
+    async function loadWordPressPosts() {
+      const container = document.getElementById('wp-projects-container');
+
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error('API error ' + res.status);
+        const data = await res.json();
+        const posts = data.posts.filter(p => p.type === 'post');
+
+        if (posts.length === 0) {
+          container.innerHTML = '<p style="text-align:center;opacity:.5;">No posts found.</p>';
+          return;
+        }
+
+        document.getElementById('post-count').textContent = posts.length < 10 ? '0' + posts.length : posts.length;
+        document.getElementById('stat-projects').textContent = posts.length + '+';
+
+        const grid = document.createElement('div');
+        grid.className = 'projects-grid';
+
+        posts.forEach(post => {
+          grid.appendChild(buildProjectCard(post));
+        });
+
+        container.innerHTML = '';
+        container.appendChild(grid);
+
+        container.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+      } catch (err) {
+        console.error('WordPress API error:', err);
+        container.innerHTML = `
+          <p style="text-align:center;opacity:.6;font-size:14px;">
+            Could not load posts automatically.<br>
+            <a href="https://${WP_SITE}" target="_blank" style="color:var(--accent);">Visit WordPress blog →</a>
+          </p>
+        `;
+      }
+    }
+
+    // =============================================
+    // CORE SCRIPTS
+    // =============================================
     const observer = new IntersectionObserver(entries => {
       entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.08 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-    function makeCanvas(id) {
-      const canvas = document.getElementById(id);
-      if (!canvas) return null;
-      const parent = canvas.parentElement;
-      const rect = parent.getBoundingClientRect();
-      const w = rect.width || 400;
-      const h = rect.height || 300;
-      canvas.width = w * 2;
-      canvas.height = h * 2;
-      canvas.style.width = '100%';
-      canvas.style.height = '100%';
-      const ctx = canvas.getContext('2d');
-      ctx.scale(2, 2);
-      return { ctx, w, h };
+    function closeModal() {
+      document.querySelectorAll('.project-modal-overlay').forEach(m => m.classList.remove('active'));
+      document.body.classList.remove('modal-open');
     }
 
-    function rand(min, max) { return Math.random() * (max - min) + min; }
-
-    function drawDrift() {
-      const c = makeCanvas('cv-drift'); if (!c) return;
-      const {ctx,w,h} = c;
-      const bg = ctx.createLinearGradient(0,0,0,h);
-      bg.addColorStop(0,'#050a1a'); bg.addColorStop(1,'#0d1533');
-      ctx.fillStyle = bg; ctx.fillRect(0,0,w,h);
-      ctx.fillStyle = '#111827';
-      ctx.beginPath();
-      ctx.moveTo(w*0.1,h); ctx.lineTo(w*0.4,h*0.5);
-      ctx.lineTo(w*0.6,h*0.5); ctx.lineTo(w*0.9,h); ctx.fill();
-      ctx.strokeStyle = 'rgba(255,240,100,0.5)'; ctx.lineWidth = 2;
-      ctx.setLineDash([12,12]);
-      ctx.beginPath(); ctx.moveTo(w*0.5,h); ctx.lineTo(w*0.5,h*0.5); ctx.stroke();
-      ctx.setLineDash([]);
-      for (let i=0;i<30;i++) {
-        ctx.fillStyle = `rgba(${rand(150,255)},${rand(100,200)},${rand(50,150)},${rand(.2,.5)})`;
-        ctx.fillRect(rand(0,w), rand(0,h*0.45), rand(3,8), rand(10,30));
-      }
-      for (let i=0;i<6;i++) {
-        const grd = ctx.createLinearGradient(0,h*0.55+i*8,w,h*0.55+i*8);
-        grd.addColorStop(0,'rgba(242,196,206,0)');
-        grd.addColorStop(0.5,`rgba(242,196,206,${rand(.1,.3)})`);
-        grd.addColorStop(1,'rgba(242,196,206,0)');
-        ctx.fillStyle = grd; ctx.fillRect(0,h*0.55+i*8,w,2);
-      }
-      ctx.fillStyle = '#F2C4CE';
-      ctx.fillRect(w*0.35,h*0.62,w*0.3,h*0.1);
-      ctx.fillRect(w*0.42,h*0.55,w*0.16,h*0.07);
-      ctx.fillStyle = '#0a0f22';
-      ctx.beginPath(); ctx.arc(w*0.41,h*0.72,h*0.05,0,Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(w*0.59,h*0.72,h*0.05,0,Math.PI*2); ctx.fill();
-      const hl = ctx.createRadialGradient(w*0.62,h*0.67,2,w*0.62,h*0.67,40);
-      hl.addColorStop(0,'rgba(255,240,200,.6)'); hl.addColorStop(1,'rgba(255,240,200,0)');
-      ctx.fillStyle = hl; ctx.fillRect(w*0.55,h*0.5,80,80);
-    }
-
-    function drawVR() {
-      const c = makeCanvas('cv-vr'); if (!c) return;
-      const {ctx,w,h} = c;
-      ctx.fillStyle = '#050810'; ctx.fillRect(0,0,w,h);
-      ctx.strokeStyle = 'rgba(43,68,255,.04)';
-      for (let y=0;y<h;y+=3) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
-      ctx.strokeStyle = 'rgba(43,68,255,.25)'; ctx.lineWidth = .5;
-      const vp = {x:w/2, y:h*0.5};
-      for (let i=-6;i<=6;i++) {
-        ctx.beginPath(); ctx.moveTo(w/2+i*(w/6),h); ctx.lineTo(vp.x,vp.y); ctx.stroke();
-      }
-      for (let i=0;i<5;i++) {
-        const y = vp.y + (h-vp.y)*((i+1)/5);
-        ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke();
-      }
-      ctx.strokeStyle = 'rgba(242,196,206,.7)'; ctx.lineWidth = 1.5;
-      const cx=w*0.5, cy=h*0.25;
-      ctx.beginPath(); ctx.arc(cx,cy,14,0,Math.PI*2); ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(cx,cy+14); ctx.lineTo(cx,cy+60);
-      ctx.moveTo(cx-30,cy+28); ctx.lineTo(cx,cy+22); ctx.lineTo(cx+30,cy+34);
-      ctx.moveTo(cx,cy+60); ctx.lineTo(cx-22,cy+100);
-      ctx.moveTo(cx,cy+60); ctx.lineTo(cx+22,cy+100);
-      ctx.stroke();
-      ctx.strokeStyle = 'rgba(43,68,255,.8)'; ctx.lineWidth = 2;
-      ctx.shadowBlur = 8; ctx.shadowColor = '#2B44FF';
-      ctx.strokeRect(cx-18,cy-8,36,12);
-      ctx.shadowBlur = 0;
-      for (let i=0;i<8;i++) {
-        const ox=rand(w*.1,w*.9), oy=rand(h*.1,h*.65);
-        const gr=ctx.createRadialGradient(ox,oy,0,ox,oy,6);
-        gr.addColorStop(0,'rgba(43,68,255,.7)'); gr.addColorStop(1,'rgba(43,68,255,0)');
-        ctx.fillStyle=gr; ctx.fillRect(ox-6,oy-6,12,12);
-        ctx.fillStyle='#2B44FF'; ctx.beginPath(); ctx.arc(ox,oy,2,0,Math.PI*2); ctx.fill();
-      }
-      ctx.strokeStyle='rgba(242,196,206,.4)'; ctx.lineWidth=1;
-      ctx.shadowBlur=10; ctx.shadowColor='#F2C4CE';
-      ctx.beginPath(); ctx.moveTo(0,h*0.5); ctx.lineTo(w,h*0.5); ctx.stroke();
-      ctx.shadowBlur=0;
-    }
-
-    function drawAR() {
-      const c = makeCanvas('cv-ar'); if (!c) return;
-      const {ctx,w,h} = c;
-      ctx.fillStyle='#0a0512'; ctx.fillRect(0,0,w,h);
-      ctx.strokeStyle='rgba(242,196,206,.4)'; ctx.lineWidth=1.5;
-      ctx.beginPath(); ctx.ellipse(w/2,h*0.45,w*0.22,h*0.3,0,0,Math.PI*2); ctx.stroke();
-      const dots = [
-        [w/2,h*.18],[w*.38,h*.28],[w*.62,h*.28],
-        [w*.33,h*.42],[w*.67,h*.42],[w*.42,h*.54],[w*.58,h*.54],
-        [w*.5,h*.6],[w*.38,h*.65],[w*.62,h*.65]
-      ];
-      ctx.fillStyle='rgba(43,68,255,.8)';
-      dots.forEach(([x,y])=>{ ctx.beginPath(); ctx.arc(x,y,2.5,0,Math.PI*2); ctx.fill(); });
-      ctx.strokeStyle='rgba(43,68,255,.2)'; ctx.lineWidth=.7;
-      for (let i=0;i<dots.length;i++) {
-        for (let j=i+1;j<dots.length;j++) {
-          const d=Math.hypot(dots[i][0]-dots[j][0],dots[i][1]-dots[j][1]);
-          if (d<w*0.3) {
-            ctx.beginPath(); ctx.moveTo(dots[i][0],dots[i][1]); ctx.lineTo(dots[j][0],dots[j][1]); ctx.stroke();
-          }
-        }
-      }
-      for (let i=0;i<20;i++) {
-        const px=rand(w*.15,w*.85), py=rand(h*.05,h*.85);
-        const size=rand(3,8);
-        ctx.strokeStyle=`rgba(242,196,206,${rand(.3,.8)})`; ctx.lineWidth=1;
-        ctx.beginPath(); ctx.moveTo(px,py-size); ctx.lineTo(px,py+size); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(px-size,py); ctx.lineTo(px+size,py); ctx.stroke();
-      }
-      ctx.strokeStyle='rgba(242,196,206,.12)'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.ellipse(w/2,h*.45,w*.35,h*.45,0,0,Math.PI*2); ctx.stroke();
-      ctx.strokeStyle='rgba(43,68,255,.15)';
-      ctx.beginPath(); ctx.ellipse(w/2,h*.45,w*.42,h*.52,0,0,Math.PI*2); ctx.stroke();
-    }
-
-    function drawTerrain() {
-      const c = makeCanvas('cv-terrain'); if (!c) return;
-      const {ctx,w,h} = c;
-      ctx.fillStyle='#0b140b'; ctx.fillRect(0,0,w,h);
-      const sky=ctx.createLinearGradient(0,0,0,h*0.5);
-      sky.addColorStop(0,'rgba(5,8,30,1)'); sky.addColorStop(1,'rgba(20,35,60,.8)');
-      ctx.fillStyle=sky; ctx.fillRect(0,0,w,h*0.5);
-      for (let i=0;i<40;i++) {
-        ctx.fillStyle=`rgba(255,255,255,${rand(.2,.7)})`;
-        ctx.beginPath(); ctx.arc(rand(0,w),rand(0,h*.4),rand(.5,1.5),0,Math.PI*2); ctx.fill();
-      }
-      const cols = ['rgba(20,40,20,.9)','rgba(30,55,28,.85)','rgba(45,75,40,.8)','rgba(60,95,55,.75)'];
-      cols.forEach((col,i) => {
-        ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(0,h);
-        const base=h*(0.35+i*.12);
-        for (let x=0;x<=w;x+=8) {
-          ctx.lineTo(x, base + Math.sin(x*.02+i*1.5)*30 + Math.sin(x*.05+i)*15 - i*5);
-        }
-        ctx.lineTo(w,h); ctx.fill();
+    document.querySelectorAll('.project-modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
       });
-      ctx.fillStyle='rgba(43,68,255,.15)';
-      ctx.fillRect(w*.05,h*.05,w*.3,h*.2);
-      ctx.strokeStyle='rgba(43,68,255,.4)'; ctx.lineWidth=1;
-      ctx.strokeRect(w*.05,h*.05,w*.3,h*.2);
-      for (let i=0;i<3;i++) {
-        ctx.fillStyle='rgba(242,196,206,.4)';
-        ctx.fillRect(w*.07+i*w*.08,h*.1,w*.05,h*.08);
-        ctx.strokeStyle='rgba(242,196,206,.3)'; ctx.lineWidth=.5;
-        ctx.strokeRect(w*.07+i*w*.08,h*.1,w*.05,h*.08);
-        if (i<2) {
-          ctx.strokeStyle='rgba(242,196,206,.2)'; ctx.lineWidth=1;
-          ctx.beginPath();
-          ctx.moveTo(w*.12+i*w*.08,h*.14); ctx.lineTo(w*.14+i*w*.08,h*.14); ctx.stroke();
-        }
-      }
-    }
+    });
 
-    function drawAqua() {
-      const c = makeCanvas('cv-aqua'); if (!c) return;
-      const {ctx,w,h} = c;
-      const ocean=ctx.createLinearGradient(0,0,0,h);
-      ocean.addColorStop(0,'#051520'); ocean.addColorStop(1,'#0a2840');
-      ctx.fillStyle=ocean; ctx.fillRect(0,0,w,h);
-      for (let i=0;i<15;i++) {
-        ctx.strokeStyle=`rgba(43,68,255,${rand(.05,.15)})`; ctx.lineWidth=1;
-        const x=rand(0,w), y=rand(0,h*.5);
-        ctx.beginPath(); ctx.ellipse(x,y,rand(10,25),rand(5,12),rand(0,Math.PI),0,Math.PI*2); ctx.stroke();
-      }
-      ctx.fillStyle='rgba(100,150,200,.3)';
-      ctx.beginPath(); ctx.ellipse(w*0.5,h*0.35,w*0.28,h*0.11,0,0,Math.PI*2); ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(w*0.22,h*0.35); ctx.lineTo(w*0.1,h*0.25); ctx.lineTo(w*0.1,h*0.45); ctx.fill();
-      for (let i=0;i<8;i++) {
-        const fx=rand(w*.1,w*.9), fy=rand(h*.5,h*.9), fs=rand(8,16);
-        ctx.fillStyle=`rgba(242,196,206,${rand(.15,.4)})`;
-        ctx.beginPath(); ctx.ellipse(fx,fy,fs,fs*0.45,0,0,Math.PI*2); ctx.fill();
-        ctx.beginPath();
-        ctx.moveTo(fx-fs,fy); ctx.lineTo(fx-fs*1.5,fy-fs*.4); ctx.lineTo(fx-fs*1.5,fy+fs*.4); ctx.fill();
-      }
-      for (let i=0;i<12;i++) {
-        ctx.strokeStyle=`rgba(242,196,206,${rand(.1,.3)})`; ctx.lineWidth=1;
-        ctx.beginPath(); ctx.arc(rand(w*.2,w*.8),rand(h*.3,h*.9),rand(2,6),0,Math.PI*2); ctx.stroke();
-      }
-    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
 
-    function drawPortrait() {
-      const c = makeCanvas('cv-portrait'); if (!c) return;
-      const {ctx,w,h} = c;
-      ctx.fillStyle='#12080f'; ctx.fillRect(0,0,w,h);
-      const bg=ctx.createRadialGradient(w*.5,h*.4,20,w*.5,h*.4,h*.8);
-      bg.addColorStop(0,'rgba(80,30,50,.4)'); bg.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
-      const hg=ctx.createRadialGradient(w*.5,h*.38,10,w*.5,h*.38,h*.35);
-      hg.addColorStop(0,'rgba(200,140,120,.55)');
-      hg.addColorStop(0.6,'rgba(180,110,95,.35)');
-      hg.addColorStop(1,'rgba(150,80,70,0)');
-      ctx.fillStyle=hg;
-      ctx.beginPath(); ctx.ellipse(w*.5,h*.38,w*.16,h*.22,0,0,Math.PI*2); ctx.fill();
-      ctx.strokeStyle='rgba(60,30,20,.6)'; ctx.lineWidth=8;
-      for (let i=0;i<6;i++) {
-        const sx=w*.5+rand(-w*.12,w*.12);
-        ctx.beginPath(); ctx.moveTo(sx,h*.1); ctx.quadraticCurveTo(sx+rand(-20,20),h*.2,w*.5+rand(-w*.15,w*.15),h*.55); ctx.stroke();
-      }
-      ctx.fillStyle='rgba(43,68,255,.6)';
-      ctx.beginPath(); ctx.ellipse(w*.43,h*.36,5,3.5,0,0,Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.ellipse(w*.57,h*.36,5,3.5,0,0,Math.PI*2); ctx.fill();
-      ctx.strokeStyle='rgba(242,196,206,.15)'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.ellipse(w*.5,h*.38,w*.18,h*.24,0,0,Math.PI*2); ctx.stroke();
-      ctx.fillStyle='rgba(43,68,255,.1)';
-      ctx.fillRect(w*.65,h*.1,w*.28,h*.25);
-      ctx.strokeStyle='rgba(43,68,255,.3)'; ctx.lineWidth=.5;
-      ctx.strokeRect(w*.65,h*.1,w*.28,h*.25);
-      ctx.fillStyle='rgba(242,196,206,.4)'; ctx.font='8px Space Grotesk';
-      ctx.fillText('IRIS SHADER',w*.67,h*.14);
-    }
-
-    function drawHerder() {
-      const c = makeCanvas('cv-herder'); if (!c) return;
-      const {ctx,w,h} = c;
-      ctx.fillStyle='#0a0c10'; ctx.fillRect(0,0,w,h);
-      const sky=ctx.createLinearGradient(0,0,0,h*.5);
-      sky.addColorStop(0,'#1a0e05'); sky.addColorStop(1,'#3d2510');
-      ctx.fillStyle=sky; ctx.fillRect(0,0,w,h*.5);
-      const gnd=ctx.createLinearGradient(0,h*.5,0,h);
-      gnd.addColorStop(0,'#2a1a08'); gnd.addColorStop(1,'#1a0f05');
-      ctx.fillStyle=gnd; ctx.fillRect(0,h*.5,w,h*.5);
-      const cg=ctx.createRadialGradient(w*.5,h*.35,5,w*.5,h*.35,h*.4);
-      cg.addColorStop(0,'rgba(200,140,80,.3)'); cg.addColorStop(1,'rgba(200,140,80,0)');
-      ctx.fillStyle=cg; ctx.fillRect(0,0,w,h);
-      ctx.fillStyle='rgba(180,120,60,.4)';
-      ctx.beginPath();
-      ctx.moveTo(w*.4,h*.15); ctx.quadraticCurveTo(w*.35,h*.45,w*.28,h*.7);
-      ctx.lineTo(w*.72,h*.7); ctx.quadraticCurveTo(w*.65,h*.45,w*.6,h*.15); ctx.fill();
-      ctx.fillStyle='rgba(190,130,80,.5)';
-      ctx.beginPath(); ctx.arc(w*.5,h*.13,h*.06,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='rgba(140,90,45,.6)';
-      ctx.beginPath(); ctx.ellipse(w*.5,h*.11,h*.065,h*.03,0,0,Math.PI*2); ctx.fill();
-      ctx.strokeStyle='rgba(255,200,120,.2)'; ctx.lineWidth=2;
-      ctx.beginPath();
-      ctx.moveTo(w*.4,h*.15); ctx.quadraticCurveTo(w*.3,h*.4,w*.28,h*.7); ctx.stroke();
-      const sss=ctx.createRadialGradient(w*.56,h*.13,1,w*.56,h*.13,15);
-      sss.addColorStop(0,'rgba(255,80,60,.25)'); sss.addColorStop(1,'rgba(255,80,60,0)');
-      ctx.fillStyle=sss; ctx.fillRect(w*.45,h*.05,30,30);
-    }
-
-    function drawBMW() {
-      const c = makeCanvas('cv-bmw'); if (!c) return;
-      const {ctx,w,h} = c;
-      ctx.fillStyle='#080808'; ctx.fillRect(0,0,w,h);
-      const fl=ctx.createLinearGradient(0,h*.55,0,h);
-      fl.addColorStop(0,'rgba(30,30,30,.8)'); fl.addColorStop(1,'rgba(5,5,5,1)');
-      ctx.fillStyle=fl; ctx.fillRect(0,h*.55,w,h*.45);
-      ctx.fillStyle='rgba(180,180,200,.85)';
-      ctx.beginPath();
-      ctx.moveTo(w*.08,h*.65); ctx.lineTo(w*.15,h*.4);
-      ctx.quadraticCurveTo(w*.25,h*.3,w*.42,h*.28);
-      ctx.lineTo(w*.68,h*.28); ctx.quadraticCurveTo(w*.82,h*.3,w*.88,h*.4);
-      ctx.lineTo(w*.92,h*.65); ctx.closePath(); ctx.fill();
-      ctx.fillStyle='rgba(100,130,180,.5)';
-      ctx.beginPath();
-      ctx.moveTo(w*.42,h*.28); ctx.lineTo(w*.38,h*.38);
-      ctx.lineTo(w*.56,h*.38); ctx.lineTo(w*.6,h*.28); ctx.fill();
-      ctx.fillStyle='#1a1a1a';
-      ctx.beginPath(); ctx.arc(w*.22,h*.66,h*.1,0,Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(w*.75,h*.66,h*.1,0,Math.PI*2); ctx.fill();
-      ctx.strokeStyle='rgba(200,200,200,.4)'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.arc(w*.22,h*.66,h*.07,0,Math.PI*2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(w*.75,h*.66,h*.07,0,Math.PI*2); ctx.stroke();
-      const ll=ctx.createRadialGradient(w*.1,h*.1,5,w*.1,h*.1,w*.6);
-      ll.addColorStop(0,'rgba(255,255,255,.12)'); ll.addColorStop(1,'rgba(255,255,255,0)');
-      ctx.fillStyle=ll; ctx.fillRect(0,0,w,h);
-      ctx.fillStyle='rgba(180,180,200,.08)';
-      ctx.beginPath(); ctx.ellipse(w*.5,h*.73,w*.35,h*.05,0,0,Math.PI*2); ctx.fill();
-    }
-
-    function drawShader() {
-      const c = makeCanvas('cv-shader'); if (!c) return;
-      const {ctx,w,h} = c;
-      ctx.fillStyle='#0d1a0d'; ctx.fillRect(0,0,w,h);
-      for (let row=0;row<6;row++) {
-        for (let col=0;col<8;col++) {
-          const x=col*(w/8), y=h*.35+row*(h*.11);
-          const bright=0.15+Math.random()*.15;
-          ctx.fillStyle=`rgba(40,80,40,${bright})`;
-          ctx.beginPath();
-          ctx.moveTo(x+w/16,y); ctx.lineTo(x+w/8,y+h*.055);
-          ctx.lineTo(x+w/16,y+h*.11); ctx.lineTo(x,y+h*.055); ctx.fill();
-          ctx.strokeStyle='rgba(100,160,100,.2)'; ctx.lineWidth=.5; ctx.stroke();
-        }
-      }
-      ctx.strokeStyle='rgba(150,220,255,.5)'; ctx.lineWidth=1;
-      for (let i=0;i<18;i++) {
-        const rx=rand(0,w), ry=rand(h*.3,h*.8), rl=rand(8,20);
-        ctx.beginPath(); ctx.moveTo(rx,ry); ctx.lineTo(rx+rand(-3,3),ry+rl); ctx.stroke();
-      }
-      const sheen=ctx.createLinearGradient(0,h*.35,w,h*.9);
-      sheen.addColorStop(0,'rgba(255,255,255,0)');
-      sheen.addColorStop(.45,'rgba(255,255,255,.08)');
-      sheen.addColorStop(1,'rgba(255,255,255,0)');
-      ctx.fillStyle=sheen; ctx.fillRect(0,h*.35,w,h*.65);
-      ctx.fillStyle='rgba(43,68,255,.15)';
-      ctx.fillRect(w*.03,h*.04,w*.45,h*.22);
-      ctx.strokeStyle='rgba(43,68,255,.4)'; ctx.lineWidth=.8;
-      ctx.strokeRect(w*.03,h*.04,w*.45,h*.22);
-      ctx.fillStyle='rgba(242,196,206,.5)'; ctx.font='7px monospace';
-      ['#pragma surface surf','  tessellate:tessFixed','  float _Tess = 4;','  flowmap uv warp'].forEach((line,i)=>{
-        ctx.fillText(line, w*.05, h*.09+i*10);
-      });
-    }
-
-    function drawAstro() {
-      const c = makeCanvas('cv-astro'); if (!c) return;
-      const {ctx,w,h} = c;
-      ctx.fillStyle='#03050f'; ctx.fillRect(0,0,w,h);
-      for (let i=0;i<60;i++) {
-        ctx.fillStyle=`rgba(255,255,255,${rand(.3,.8)})`;
-        ctx.beginPath(); ctx.arc(rand(0,w),rand(0,h),rand(.5,1.5),0,Math.PI*2); ctx.fill();
-      }
-      const neb=ctx.createRadialGradient(w*.3,h*.4,5,w*.3,h*.4,w*.3);
-      neb.addColorStop(0,'rgba(43,68,255,.12)'); neb.addColorStop(1,'rgba(43,68,255,0)');
-      ctx.fillStyle=neb; ctx.fillRect(0,0,w,h);
-      ctx.fillStyle='rgba(100,80,60,.6)';
-      ctx.beginPath(); ctx.arc(w*.75,h*.25,h*.08,0,Math.PI*2); ctx.fill();
-      ctx.strokeStyle='rgba(150,120,90,.3)'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.arc(w*.75,h*.25,h*.11,0,Math.PI*2); ctx.stroke();
-      ctx.fillStyle='rgba(242,196,206,.8)';
-      ctx.beginPath();
-      ctx.moveTo(w*.5,h*.55); ctx.lineTo(w*.44,h*.68);
-      ctx.lineTo(w*.5,h*.64); ctx.lineTo(w*.56,h*.68); ctx.closePath(); ctx.fill();
-      const eg=ctx.createRadialGradient(w*.5,h*.67,2,w*.5,h*.67,15);
-      eg.addColorStop(0,'rgba(43,68,255,.8)'); eg.addColorStop(1,'rgba(43,68,255,0)');
-      ctx.fillStyle=eg; ctx.fillRect(w*.43,h*.62,14,20);
-      for (let i=0;i<6;i++) {
-        const ex=rand(w*.05,w*.95), ey=rand(h*.1,h*.45), es=rand(6,14);
-        ctx.strokeStyle=`rgba(200,100,80,${rand(.4,.7)})`; ctx.lineWidth=1.5;
-        ctx.strokeRect(ex-es/2,ey-es/2,es,es);
-        ctx.beginPath();
-        ctx.moveTo(ex-es*.3,ey-es*.3); ctx.lineTo(ex+es*.3,ey+es*.3);
-        ctx.moveTo(ex+es*.3,ey-es*.3); ctx.lineTo(ex-es*.3,ey+es*.3); ctx.stroke();
-      }
-      ctx.fillStyle='rgba(255,240,100,.8)';
-      ctx.fillRect(w*.49,h*.42,3,12);
-    }
-
-    // ── Live Games canvases ──
-    function drawGameCanvas(id, drawFn) {
-      const canvas = document.getElementById(id);
-      if (!canvas) return;
-      const parent = canvas.parentElement;
-      canvas.width = 800; canvas.height = 280;
-      canvas.style.width = '100%'; canvas.style.height = '140px';
-      const ctx = canvas.getContext('2d');
-      ctx.scale(1,1);
-      drawFn(ctx, 800, 280);
-    }
-
-    function drawGCDrift(ctx, w, h) {
-      const bg = ctx.createLinearGradient(0,0,w,h);
-      bg.addColorStop(0,'#1a0800'); bg.addColorStop(0.5,'#2d1200'); bg.addColorStop(1,'#0d0500');
-      ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
-      ctx.fillStyle='#1f1008';
-      ctx.beginPath(); ctx.moveTo(0,h); ctx.lineTo(w*0.3,h*0.4); ctx.lineTo(w*0.7,h*0.4); ctx.lineTo(w,h); ctx.fill();
-      ctx.strokeStyle='rgba(255,200,50,.35)'; ctx.lineWidth=3; ctx.setLineDash([20,20]);
-      ctx.beginPath(); ctx.moveTo(w*0.5,h); ctx.lineTo(w*0.5,h*0.4); ctx.stroke(); ctx.setLineDash([]);
-      for (let i=0;i<20;i++) {
-        ctx.fillStyle=`rgba(255,${100+Math.random()*80},0,${.15+Math.random()*.2})`;
-        const x=Math.random()*w, y=Math.random()*h*0.35;
-        ctx.fillRect(x,y,Math.random()*6+2,Math.random()*20+8);
-      }
-      ctx.fillStyle='rgba(255,107,53,.25)';
-      ctx.beginPath(); ctx.ellipse(w*0.5,h*0.75,w*0.15,h*0.06,0,0,Math.PI*2); ctx.fill();
-      ctx.strokeStyle='rgba(255,107,53,.5)'; ctx.lineWidth=2;
-      ctx.strokeRect(w*0.35,h*0.55,w*0.3,h*0.18);
-      for (let i=0;i<8;i++) { ctx.fillStyle=`rgba(255,240,200,${.3+Math.random()*.5})`; ctx.beginPath(); ctx.arc(Math.random()*w,Math.random()*h*.35,1,0,Math.PI*2); ctx.fill(); }
-    }
-
-    function drawGCFruit(ctx, w, h) {
-      const bg = ctx.createLinearGradient(0,0,0,h);
-      bg.addColorStop(0,'#1a0515'); bg.addColorStop(1,'#0d0a18');
-      ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
-      const fruits = [
-        {x:w*.15,y:h*.5,r:28,color:'rgba(255,77,109,.7)'},
-        {x:w*.35,y:h*.35,r:22,color:'rgba(255,200,50,.7)'},
-        {x:w*.5,y:h*.6,r:34,color:'rgba(50,205,50,.6)'},
-        {x:w*.65,y:h*.4,r:20,color:'rgba(255,165,0,.7)'},
-        {x:w*.8,y:h*.55,r:26,color:'rgba(138,43,226,.6)'},
-        {x:w*.25,y:h*.7,r:18,color:'rgba(255,99,71,.6)'},
-        {x:w*.7,y:h*.72,r:16,color:'rgba(0,191,255,.5)'},
-      ];
-      fruits.forEach(f => {
-        const g = ctx.createRadialGradient(f.x-f.r*.2,f.y-f.r*.2,2,f.x,f.y,f.r);
-        g.addColorStop(0,'rgba(255,255,255,.15)'); g.addColorStop(.5,f.color); g.addColorStop(1,'rgba(0,0,0,.1)');
-        ctx.fillStyle=g; ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,Math.PI*2); ctx.fill();
-      });
-      ctx.strokeStyle='rgba(255,77,109,.12)'; ctx.lineWidth=1;
-      for (let i=0;i<fruits.length;i++) for (let j=i+1;j<fruits.length;j++) {
-        if (Math.hypot(fruits[i].x-fruits[j].x,fruits[i].y-fruits[j].y)<w*.3) {
-          ctx.beginPath(); ctx.moveTo(fruits[i].x,fruits[i].y); ctx.lineTo(fruits[j].x,fruits[j].y); ctx.stroke();
-        }
-      }
-      for (let i=0;i<15;i++) { ctx.fillStyle=`rgba(255,255,255,${.1+Math.random()*.15})`; ctx.beginPath(); ctx.arc(Math.random()*w,Math.random()*h,Math.random()*2+1,0,Math.PI*2); ctx.fill(); }
-    }
-
-    function drawGCBlast(ctx, w, h) {
-      ctx.fillStyle='#0a0318'; ctx.fillRect(0,0,w,h);
-      for (let i=0;i<12;i++) {
-        const x=Math.random()*w, y=Math.random()*h, r=10+Math.random()*20;
-        const g = ctx.createRadialGradient(x,y,0,x,y,r);
-        g.addColorStop(0,`rgba(155,93,229,${.2+Math.random()*.3})`); g.addColorStop(1,'rgba(155,93,229,0)');
-        ctx.fillStyle=g; ctx.fillRect(x-r,y-r,r*2,r*2);
-      }
-      for (let i=0;i<8;i++) {
-        const cx=w*.15+Math.random()*w*.7, cy=h*.2+Math.random()*h*.6, s=12+Math.random()*18;
-        ctx.fillStyle=`rgba(${150+Math.random()*105},${50+Math.random()*100},${180+Math.random()*75},${.4+Math.random()*.3})`;
-        ctx.beginPath(); ctx.arc(cx,cy,s,0,Math.PI*2); ctx.fill();
-      }
-      for (let i=0;i<6;i++) {
-        const sx=Math.random()*w, sy=Math.random()*h;
-        ctx.strokeStyle=`rgba(255,255,100,${.2+Math.random()*.3})`; ctx.lineWidth=2;
-        ctx.beginPath();
-        for (let j=0;j<4;j++) { ctx.lineTo(sx+Math.random()*30-15, sy+Math.random()*30-15); }
-        ctx.stroke();
-      }
-    }
-
-    function drawGCShape(ctx, w, h) {
-      const bg = ctx.createLinearGradient(0,0,w,h);
-      bg.addColorStop(0,'#001220'); bg.addColorStop(1,'#000a15');
-      ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
-      const shapes = [
-        {x:w*.2,y:h*.4,sides:6,r:30,color:'rgba(0,187,249,.5)'},
-        {x:w*.45,y:h*.55,sides:4,r:24,color:'rgba(0,187,249,.4)'},
-        {x:w*.65,y:h*.35,sides:3,r:28,color:'rgba(0,187,249,.6)'},
-        {x:w*.8,y:h*.6,sides:5,r:22,color:'rgba(0,187,249,.35)'},
-        {x:w*.35,y:h*.75,sides:8,r:16,color:'rgba(0,187,249,.3)'},
-      ];
-      shapes.forEach(s => {
-        ctx.fillStyle=s.color; ctx.strokeStyle='rgba(0,187,249,.6)'; ctx.lineWidth=1.5;
-        ctx.beginPath();
-        for (let i=0;i<=s.sides;i++) {
-          const angle=(Math.PI*2/s.sides)*i - Math.PI/2;
-          const px=s.x+Math.cos(angle)*s.r, py=s.y+Math.sin(angle)*s.r;
-          i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
-        }
-        ctx.closePath(); ctx.fill(); ctx.stroke();
-        ctx.fillStyle='rgba(255,255,255,.7)'; ctx.font='bold 14px Syne'; ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillText(Math.floor(Math.random()*50+10),s.x,s.y);
-      });
-      ctx.strokeStyle='rgba(0,187,249,.15)'; ctx.lineWidth=1;
-      for (let i=0;i<6;i++) {
-        ctx.beginPath(); ctx.arc(w*.15,h*.85,5+i*8,0,Math.PI*2); ctx.stroke();
-      }
-      ctx.fillStyle='rgba(255,200,50,.6)';
-      ctx.beginPath(); ctx.moveTo(w*.12,h*.2); ctx.lineTo(w*.12,h*.2-18); ctx.lineTo(w*.2,h*.2-10);
-      ctx.closePath(); ctx.fill();
-    }
-
-    function drawAll() {
-      drawDrift(); drawVR(); drawAR(); drawTerrain(); drawAqua();
-      drawPortrait(); drawHerder(); drawBMW(); drawShader(); drawAstro();
-      drawGameCanvas('gc-drift', drawGCDrift);
-      drawGameCanvas('gc-fruit', drawGCFruit);
-      drawGameCanvas('gc-blast', drawGCBlast);
-      drawGameCanvas('gc-shape', drawGCShape);
-    }
-
-    window.addEventListener('load', drawAll);
-    window.addEventListener('resize', () => setTimeout(drawAll, 100));
+    loadWordPressPosts();
   </script>
 </body>
 </html>
